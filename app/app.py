@@ -1,9 +1,7 @@
 from auth import ForgotPasswordForm, auth_blueprint,  email_us, login_user, logout_user, register_user, review_us, subscribeus, updatedpassword
 from flask import Flask, redirect, render_template, abort, session, url_for
-from flask_mysqldb import MySQL
 from flask_mail import Mail
 from itsdangerous import URLSafeTimedSerializer
-from flask_mysqldb import MySQL
 from flask_mysqldb import MySQL
 from flask_mail import Mail
 
@@ -22,7 +20,7 @@ serializer = URLSafeTimedSerializer(app.secret_key)
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '12345678'
+app.config['MYSQL_PASSWORD'] = 'Password123!'
 app.config['MYSQL_DB'] = 'fyp'
 app.config['MYSQL_PORT'] = 3306
 mysql = MySQL(app)
@@ -98,5 +96,13 @@ def home():
     return "Hello World!"
 
 
+@app.route('/researchpapers')
+def researchpapers():
+    if 'id' in session:
+        return render_template('ResearchPapers.html')
+    else:
+        return render_template('home.html', msg="please login to access this page")
+    
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)
