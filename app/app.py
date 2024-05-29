@@ -1,8 +1,13 @@
 import requests
 from flask_mail import Mail
 from flask_mysqldb import MySQL
+from sklearn.neighbors import NearestNeighbors
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import TfidfVectorizer
 from flask import Flask, render_template, request, redirect, url_for, session
-from auth import ForgotPasswordForm, auth_blueprint,  email_us, login_user, logout_user, register_user, review_us, subscribeus, updatedpassword, fetch_reviews, process_text, process_and_suggest, process_and_suggest_professors, fetch_matching_trending_topics
+from auth import ForgotPasswordForm, auth_blueprint,  email_us, logout_user, review_us, subscribeus, updatedpassword, fetch_reviews, fetch_matching_trending_topics# , process_text, process_and_suggest, process_and_suggest_professors, 
+from multiprocessing import process
+from fuzzywuzzy import process
 
 
 app = Flask(__name__, template_folder="../frontend",
@@ -125,12 +130,13 @@ def abstract():
 @app.route('/abstractresult', methods=['POST'])
 def extract_keywords():
     text = request.form.get('text')
-    predicted_topic = process_text(text)
-    trending_topics = process_and_suggest(predicted_topic)
-    related_professors = process_and_suggest_professors(predicted_topic)
+    predicted_topic = [] # process_text(text)
+    trending_topics = [] # process_and_suggest(predicted_topic)
+    related_professors = [] # process_and_suggest_professors(predicted_topic)
     # dataframe mai can't use split n ek string mai display karrha loc se bhi nhi horha, isliye dict har value alag no \n ot \t prob also
     myls = related_professors.to_dict(orient='records')
 
+    return "Temp"
     return render_template('abstract_result.html', keywords=predicted_topic, trending_topics=trending_topics, related_professors=related_professors, myls=myls)
 
 # ----------------------------------------------------------RESEARCH PAPERS AND TRENDING TOPICS
@@ -153,46 +159,46 @@ def trending():
 
 @app.route('/search')
 def search():
-    # userSearch = request.args.get('query')
-    # search_results = []
+    userSearch = request.args.get('query')
+    search_results = []
 
-    # try:
-    #     cursor = mysql.connection.cursor()
-    #     query = "SELECT mentor_id, Name, UniversityName, Email, ResearchInterests, Designation, Country FROM mentors"
-    #     cursor.execute(query)
-    #     data_from_database = cursor.fetchall()
+    try:
+        cursor = mysql.connection.cursor()
+        query = "SELECT mentor_id, Name, UniversityName, Email, ResearchInterests, Designation, Country FROM mentors"
+        cursor.execute(query)
+        data_from_database = cursor.fetchall()
 
-    #     research_interests = [row[4] for row in data_from_database]
+        research_interests = [row[4] for row in data_from_database]
 
-    #     matched_interests = process.extract(
-    #         userSearch, research_interests, limit=10)
+        matched_interests = process.extract(
+            userSearch, research_interests, limit=10)
 
-    #     matched_rows = [row for row in data_from_database if row[4] in [
-    #         match[0] for match in matched_interests]]
+        matched_rows = [row for row in data_from_database if row[4] in [
+            match[0] for match in matched_interests]]
 
-    #     text_data = [row[1] + ' ' + row[2] for row in matched_rows]
+        text_data = [row[1] + ' ' + row[2] for row in matched_rows]
 
-    #     if text_data:
-    #         vector_for_conversion = TfidfVectorizer(stop_words='english')
-    #         tfidf_matrix = vector_for_conversion.fit_transform(text_data)
+        if text_data:
+            vector_for_conversion = TfidfVectorizer(stop_words='english')
+            tfidf_matrix = vector_for_conversion.fit_transform(text_data)
 
-    #         knn_model = NearestNeighbors(n_neighbors=len(
-    #             matched_rows), algorithm='brute', metric='cosine')
-    #         knn_model.fit(tfidf_matrix)
+            knn_model = NearestNeighbors(n_neighbors=len(
+                matched_rows), algorithm='brute', metric='cosine')
+            knn_model.fit(tfidf_matrix)
 
-    #         user_input_vector = vector_for_conversion.transform([userSearch])
+            user_input_vector = vector_for_conversion.transform([userSearch])
 
-    #         indices = knn_model.kneighbors(
-    #             user_input_vector, return_distance=False)[0]
+            indices = knn_model.kneighbors(
+                user_input_vector, return_distance=False)[0]
 
-    #         for index in indices:
-    #             nearest_neighbor_data = matched_rows[index]
-    #             search_results.append(nearest_neighbor_data)
+            for index in indices:
+                nearest_neighbor_data = matched_rows[index]
+                search_results.append(nearest_neighbor_data)
 
-    # except Exception as e:
-    #     print("Error connecting to MySQL database:", e)
-    # finally:
-    #     cursor.close()
+    except Exception as e:
+        print("Error connecting to MySQL database:", e)
+    finally:
+        cursor.close()
 
     return render_template('search_results.html', userQuery=[], results=[])
 
