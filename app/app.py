@@ -95,7 +95,7 @@ def reviewus():
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return "Hello World!"
 
 
 if __name__ == '__main__':
