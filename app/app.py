@@ -19,7 +19,7 @@ app.secret_key = '12345678'
 serializer = URLSafeTimedSerializer(app.secret_key)
 
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_USER'] = 'flaskuser'
 app.config['MYSQL_PASSWORD'] = 'Password123!'
 app.config['MYSQL_DB'] = 'fyp'
 app.config['MYSQL_PORT'] = 3306
