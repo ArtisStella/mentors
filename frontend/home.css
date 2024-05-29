@@ -1,0 +1,522 @@
+
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+/*------------------------------------------ BACKGROUND PIC & TEXT ------------------------------------------*/
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.content {
+  flex: 1;
+}
+
+.jumbotron {
+    background-image: url('../img/carousel-1.jpg'); 
+    background-size: cover;
+    background-position: center;
+    height: 95vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white; 
+    text-align: center;
+}
+.jumbotron h1 {
+    font-size: 5rem;
+}
+/*---------------------------------------FOOTER-----------------------------------*/
+.pb-5, .py-5{
+  padding-bottom: 0rem !important;
+  padding-left: 0%;
+  padding-right: 0%;
+}
+
+/*-------------------------------------------- FOOTER PICTURE PART DESIGN --------------------------------------------*/
+.grad { 
+    background-size: cover;
+    background-position: center;
+    height: 55vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #357CA5; 
+    text-align: center;
+    padding: 0;
+    box-sizing: border-box;
+}
+.grad, .grad * {
+  margin: 0;
+  padding: 0;
+}
+/* .grad h1 {
+    font-size: 5rem;
+}
+.grad h1 {
+    font-size: 2rem;
+} */
+
+
+/*------------------------------------------ POP UP DESIGN ------------------------------------------*/
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+}
+.popup-content {
+    position: absolute;
+    top: 50%;
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 400px; 
+    height: auto; 
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px; /*corners*/
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    display: flex; 
+}
+.popup-closeicon {
+    font-size: 24px;  
+    cursor: pointer;
+    color: black; 
+    position: absolute;
+    top: 15px;
+    right: 10px;   
+}
+/*------------------------------------------ POPUP RESEARCH PAPER DESIGN ------------------------------------------*/
+.toast-body a {
+  color: black;
+  text-decoration: underline; 
+}
+.toast {
+  background-color: white !important; 
+  color: black;
+  font-family: 'Allegro', sans-serif;
+  font-weight: bold;
+  height: 100px;
+  }
+  
+  .toast-header {
+  border-bottom: none;
+  background-color: #357CA5 !important; 
+  color: white;
+  }
+  
+  .toast-body {
+  font-family: 'Allegro', sans-serif;
+  font-weight: bold;
+  }
+  
+  .toast-header .btn-close {
+  color: white;
+  border: none;
+  background-color: #357CA5;
+  opacity: 0.7;
+  }
+  
+  .toast-header .btn-close:hover {
+  opacity: 1;
+  }
+
+  /*------------------------------------------ NAVBAR DESIGN ------------------------------------------*/
+  .navbar-logocolor, .navbar-brand{
+    -webkit-text-fill-color: rgb(70, 130, 180);
+  }
+  .navbar-btn {
+    background-color: #4682B4;
+    border-color: #4682B4;
+  }
+  .navbar-btn:hover {
+    background-color: #357CA5;
+    border-color: #357CA5;
+}
+  /*------------------------------------------ top DESIGN ------------------------------------------
+  
+  .topcontainer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-top: 60px; 
+    padding-bottom: 100px;
+  }
+  
+  .topcard {
+    width: calc(25% - 50px); 
+    max-width: 200px; 
+    height: 200px; 
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 2px 2px 4px #357CA5;
+    transition: transform 0.3s ease;
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .topcard:hover {
+    transform: translateY(-5px);
+  }
+  .topcard-title {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    padding-top: 80px; 
+  }
+  .top-heading {
+    padding-top: 30px;
+    color: #4682B4;
+    font-size: 35px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  */
+  
+  /*------------------------------------------ SEARCH CARD DESIGN ------------------------------------------*/
+/* Styles for larger screens */
+.searchcontainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center; 
+  padding-bottom: 30px;
+  flex-wrap: wrap; /* Allow flex items to wrap to the next line */
+}
+
+.searchcard {
+  width: 360px;
+  height: 350px;
+  padding-top: 40px;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 2px 2px 4px #357CA5;
+  transition: transform 0.3s ease;
+  margin-bottom: 20px; /* Add margin between cards */
+}
+
+.searchcard:hover {
+  transform: translateY(-5px);
+}
+
+.searchcard-icon {
+  color: #357CA5;
+  width: 100px;
+  height: 100px;
+  margin: 20px auto;
+}
+
+.searchcard-title {
+  color: #4682B4;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.searchcard-text {
+  font-size: 16px;
+  text-align: center;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .searchcontainer {
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 20px;
+  }
+  
+  .searchcard {
+    width: 280px;
+    height: auto;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .searchcard-icon {
+    width: 80px;
+    height: 80px;
+    margin: 10px auto;
+  }
+  
+  .searchcard-title {
+    font-size: 18px;
+  }
+  
+  .searchcard-text {
+    font-size: 14px;
+  }
+}
+
+
+    /*-------------------------- TRENDING TOPICS CARDS---------------------*/
+
+.topicscontainer{
+    padding-left: 15%; 
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.topicscard {
+    display: inline-block;
+    width: calc(30% - 30px);
+    margin: 7px;
+    text-align: center; 
+    box-sizing: border-box;
+}
+
+
+.card-clickable {
+    font-size: 15px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white; 
+    padding: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    height: 60px;
+    width: 100%; 
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    background-color: #71a3c0;
+}
+.card-clickable:hover {
+    background-color: #4682B4;
+}
+.topicscard:hover {
+  transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+  .topicscontainer {
+      padding-left: 20%;   
+}
+  .card-clickable {
+  font-size: 15px;
+  }
+
+  .topicscard {
+      width: calc(40% - 10px); 
+  }
+}
+
+/*-----------------------SEARCHBAR ON NAVBAR-------------------------------------*/
+
+#topicSelect {
+  width: 100%;
+  max-width: 200px; 
+  height: 35px;
+  margin-bottom: 10px; 
+}
+
+@media (min-width: 768px) {
+  #searchInputsss {
+      max-width: 450px; 
+  }
+  .button{
+      height: 35px;
+      margin-left: 10px; 
+  
+  }
+}
+.button {
+  height: 35px;
+  margin-left: 10px; 
+}
+/*--------------------------------------------------------REVIEWSSS------------------------------------------------------------------------*/
+.myreviews {
+  background-color: rgb(132, 190, 214) !important;
+  padding-top: 10px;
+  margin-left: auto; /* Center the container horizontally */
+  margin-right: auto; /* Center the container horizontally */
+  text-align: center; /* Center the content inside */
+}
+
+.reviewcard {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 8px 0px;
+  position: relative;
+  margin-left: 20px;
+  margin-right: 20px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0px;
+  background-color: rgb(248, 248, 248);
+  border: 0px solid black;
+  border-radius: 10px;
+  width: 350px; /* Adjust width as needed */
+  min-height: 250px; /* Allow the content to dictate the height */
+}
+
+@media (min-width: 768px) {
+  .reviewcard {
+    width: 350px; /* Adjust width for larger screens */
+  }
+  .myreviews{
+    padding-right: auto;
+    padding-left: auto;
+  }
+  .review-conatainer{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+@media (min-width: 576px) {
+  .myreviews{
+    width:80%;
+
+  }
+  .reviewcard {
+    width: 90%; /* Adjust width for larger screens */
+    max-width: none; /* Remove maximum width */
+  }
+}
+
+.font-normal mb-5 review-content{
+  overflow: auto;
+  max-height: 130px;
+
+}
+.review-content {
+  overflow: auto; /* Enable vertical and horizontal scrolling */
+  max-height: 130px;
+}
+.mb-9 {
+  margin-bottom: 4.96rem !important;
+}
+
+.reviewcard-icon-border-large {
+  width: 100px;
+  height: 100px;
+  margin: -3.06rem auto 0px;
+  text-align: center;
+  background-color: rgb(255, 255, 255);
+  border: 6px solid;
+  border-radius: 50%;
+  font-size: 1.88rem;
+  line-height: 90px;
+  color: rgb(102, 102, 102);
+}
+
+.mtn-80 {
+  margin-top: -5rem !important; /*overall circle size and position*/
+}
+
+.review-card {
+  background-color: white; /*bg color cards*/
+}
+
+.review-icon-circle {
+  border-color: rgb(132, 190, 214) !important; /*icon circle color*/
+}
+
+.review-icon {
+  color: rgb(132, 190, 214) !important; /*icon color */
+}
+
+
+/*--------------------------------------------------------WORKS------------------------------------------------------------------------*/
+.card{cursor: pointer}
+.card.hover, .card:hover{box-shadow: 0 20px 40px rgba(0, 0, 0, .2)}
+.img{
+  margin-bottom: 35px;
+  -webkit-filter: drop-shadow(5px 5px 5px #222);
+  filter: drop-shadow(5px 5px 5px #222)
+}
+.card-title{font-weight: 600}
+button.focus, button:focus{outline: 0;box-shadow: none !important}
+.ft{margin-top: 25px}.chk{margin-bottom: 5px}
+.rck{margin-top: 20px;padding-bottom: 15px}
+
+
+/*------------------------------------------extra-----------------------------------*/
+@media (max-width: 768px) {
+  #CountrySpotlightContainer {
+    padding-left: 90px; /* Decrease left padding for better spacing on smaller screens */
+    gap: 20px; /* Decrease gap for better spacing on smaller screens */
+    justify-content: center;
+  }
+
+  figure {
+    width: calc(50% - 20px); /* Adjust card width to fit two cards per row */
+  }
+}
+#CountrySpotlightContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding-left: 40px;
+}
+
+figure {
+  position: relative;
+  width: 250px; /* Adjust as necessary */
+  margin: 0;
+  cursor: pointer;
+  border: 1px solid #ccc; /* Optional: Adds a border to the card */
+  overflow: hidden;
+  border-radius: 10px; /* Optional: Adds rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds a shadow effect */
+  transition: transform 0.2s; /* Optional: Adds a slight zoom effect on hover */
+}
+
+figure:hover {
+  transform: scale(1.05); /* Optional: Adds a slight zoom effect on hover */
+}
+
+figure .Picture img {
+  width: 100%;
+  height: auto;
+}
+
+figcaption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px; /* Adjust as necessary */
+  transition: height 0.3s, opacity 0.3s;
+  text-align: center;
+  flex-direction: column;
+}
+
+figcaption .country-name {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+figcaption .Toggle {
+  display: none;
+  font-size: 0.9em;
+  padding-top: 10px;
+}
+
+figcaption:hover {
+  height: 100%; /* Make figcaption cover the entire card */
+  padding-top: 20px;
+}
+
+figcaption:hover .Toggle {
+  display: block;
+}
+
+figcaption:hover .country-name {
+  display: none;
+}
+

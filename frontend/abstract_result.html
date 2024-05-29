@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>AbstractResult@MentorConnects</title>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>    
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+	    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        .resultcontainer {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 800px;
+            overflow-x: auto; /* for horiz scrolling */
+        }
+
+        .content-container {
+            margin-bottom: 40px;
+        }
+
+        .keyword-container, .topic-container, .prof-container {
+            background-color: #f7f7f7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .keyword-container h2, .topic-container h2, .prof-container h2 {
+            color: #357CA5;
+            font-weight: bold;
+        }
+
+        .keyword-container p {
+            color: #555;
+        }
+
+        .topic-container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .prof-container {
+            width: auto; 
+            overflow: auto; /
+        }
+
+        .prof-container table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: auto; 
+        }
+
+        .prof-container th, .prof-container td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .prof-container th {
+            background-color: #357CA5;
+            color: white;
+        }
+
+    </style>
+</head>
+
+<body>
+<!-------------------------------------------------------NAVBAR-------------------------------------------------->
+<nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+    <div class="container">
+    <a href="{{url_for('home') }} " class="navbar-brand  align-items-center">
+        <h2 style="color:#357CA5;" class="m-0 navbar-logocolor" ><i class="fa fa-book me-3"></i>MentorConnect</h2>
+    </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavv" aria-controls="navbarNavv" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavv">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="{{url_for('home') }}" class="nav-item nav-link ">Home</a>
+                <div class="nav-item dropdown">
+                    <a  class="nav-link dropdown-toggle active " href="#" onclick="toggleDropdownMenu()">Search</a>
+                    <ul class="dropdown-menu" id="dropdownMenu">
+                        <li><a class="dropdown-item" href="{{ url_for('search') }}" >Search By Domain</a></li>
+                        <li><a class="dropdown-item active" href="{{ url_for('abstract') }}" >Search By Abstract</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('researchpapers') }}" >Research Papers</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('trending') }}" >Explore Your Interests</a></li>
+                    </ul> 
+                </div>
+                <a href="{{url_for('review')}}" class="nav-item nav-link">Review</a>
+                <a href="{{url_for('newsletter') }}" class="nav-item nav-link">Contact</a>
+            </div>
+            <a href="{{ url_for('userlogin') }}" class="btn navbar-btn py-3 px-lg-4" style="background-color: #357CA5;">Join Now</a>
+            {% if useronline or googleuser or loggedin  %}
+                <a class="nav-item nav-link" href="{{ url_for('logout') }}" >Logout</a>
+            {% endif %}
+        </div> 
+    </div>
+</nav>
+    
+<!------------------------------------------------SEARCH ABSTRACT-----=-------------------------------------------------->
+    <br><h2 style="text-align: center; font-weight: bold; color:#357CA5;">Search your abstract!</h2>
+    <form action="/abstractresult" method="POST" id="search-form" class="text-center" >
+        <div class="form-group">
+            <label for="text" class="sr-only">Enter your text here:</label>
+            <textarea class="form-control" id="text" name="text" rows="2" style="resize: none;" placeholder="Enter your text here..."></textarea>
+        </div><br>
+        <button type="submit" class="btn btn-primary btn-lg" style="background-color: #357CA5;" >Extract Result</button>
+        <!--onclick="submitForm()"-->
+    </form>
+<!--------------------------------------------------------------ABSTRACT RESULT------------------------------------------------>
+
+    <div class="resultcontainer" id="result-container">
+        <div class="content-container">
+            <div class="keyword-container">
+                <h2>Keyword</h2>
+                <p>Your abstract is associated with the following keywords: {{ keywords }}</p>
+            </div>
+            
+            <div class="topic-container">
+                <h2>Top Trending Topics</h2>
+                <ul>
+                    {% set count = 0 %}
+                    {% set display_limit = 10 %}
+                    {% set display_complete = false %}
+                    {% for topic, score in trending_topics %}
+                        {% if not display_complete %}
+                            <li><strong>{{ topic }}</strong></li>
+                            {% set count = count + 1 %}
+                            {% if count >= display_limit %}
+                                {% set display_complete = true %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        
+        <div class="prof-container"> 
+            <h2>Top Professors</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>University Name</th>
+                        <th>Email</th>
+                        <th>Research Interests</th>
+                        <th>Designation</th>
+                        <th>Country</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for professor in myls %}
+                        <tr>
+                            <td>{{ professor['Name'] }}</td>
+                            <td>{{ professor['University Name'] }}</td>
+                            <td><a href="mailto:{{ professor['Email'] }}">{{ professor['Email'] }}</a></td>
+                            <td>{{ professor['Research Interests'] }}</td>
+                            <td>{{ professor['Designation'] }}</td>
+                            <td>{{ professor['Country'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+     <!---------------------------FOOTER--------------------------------------------->
+    <footer>
+        <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+            <div class="container py-5">
+                <div class="row ">
+                    <div class="col-lg-3 col-md-6" >
+                        <h4 class="text-white mb-3">Quick Link</h4>
+                        <a class="btn btn-link" style="color:#357CA5;" href="{{url_for('home')}}">About Us</a><br>
+                        <a class="btn btn-link" style="color:#357CA5;" href="{{url_for('newsletter')}}">Contact Us</a><br>
+                        <a class="btn btn-link" style="color:#357CA5;" href="{{url_for('register')}}">Join Now</a>
+                    </div>
+    
+                    <div class="col-lg-3 col-md-6">
+                        <h4 class="text-white mb-3">Contact</h4>
+                        <a class="btn btn-outline-light btn-social" href="{{url_for('newsletter')}}"><i class="fa fa-envelope me-3"></i>Contact us</a>
+                    </div>
+    
+                    <div class="col-lg-3 col-md-6">
+                        <h4 class="text-white mb-3">Gallery</h4>
+                        <div class="row g-2 pt-2">
+                            <div class="col-4">
+                                <img class="img-fluid bg-light p-1" src="../frontend/images/team-1.jpg"> 
+                            </div>
+                            <div class="col-4">
+                                <img class="img-fluid bg-light p-1" src="../frontend/images/team-2.jpg">
+                            </div>
+                            <div class="col-4">
+                                <img class="img-fluid bg-light p-1" src="../frontend/images/team-3.jpg">
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col-lg-3 col-md-6">
+                        <h4 class="text-white mb-3">Newsletter</h4>
+                        <div class="position-relative mx-auto" style="max-width: 400px;">
+                            <input class="form-control border-0 w-100 py-3 ps-4 pe-5" type="none" placeholder="Your email">
+                            <a class="btn btn-outline-light btn-social py-2 position-absolute top-0 end-0 mt-2 me-2" style="background-color:#357CA5;" href="{{url_for('newsletter')}}">Join Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div style="text-align: center;">
+                &copy; <a class="border-bottom" style="color:#357CA5;" href="{{ url_for('home') }}">MentorConnects</a>, All Right Reserved.
+            </div>
+    </footer>
+
+<!---------------------------------------------------SCRIPTS---------------------------------------------------->
+<script>
+    function toggleDropdownMenu() {
+        var dropdownMenu = document.getElementById("dropdownMenu");
+        if (dropdownMenu.style.display === "block") {
+            dropdownMenu.style.display = "none";
+        } else {
+            dropdownMenu.style.display = "block";
+        }
+    }
+
+    function navigateTo(route) {
+        window.location.href = "{{ url_for('home') }}";
+    }
+</script>
+</body>
+</html>
+
+

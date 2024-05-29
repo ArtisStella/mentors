@@ -1,0 +1,89 @@
+/* this is for admin.html   */
+.navbar-logocolor, .navbar-brand{
+  -webkit-text-fill-color: rgb(70, 130, 180);
+}
+.navbar-btn {
+  background-color: #4682B4;
+  border-color: #4682B4;
+}
+.navbar-btn:hover {
+  background-color: #357CA5;
+  border-color: #357CA5;
+}
+.header {
+    background-color: #f8f9fa;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logout-button {
+    background-color: #dc3545;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+  }
+  
+  .dropdown {
+    margin-right: 20px; 
+  }
+  
+  .toggle-button {
+    position: fixed;
+    top: 60px; 
+    left: 20px;
+    z-index: 999;
+  }
+  
+  .container {
+    padding: 20px;
+  }
+  .sidebar {
+    position: fixed;
+    left: -250px; 
+    top: 95px;
+    bottom: 0;
+    width: 250px;
+    background-color: #eff1f3;
+    transition: left 0.3s ease;
+}
+
+.header {
+    background-color: #0879e9;
+    color: #ffffff;
+    padding: 10px;
+}
+
+.toggle-button {
+    cursor: pointer;
+}
+
+.nav-link {
+    padding: 10px 20px;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: #87c2fe;
+}
+
+.nav-item {
+    margin-bottom: 5px;
+}
+
+.nav-item:last-child {
+    margin-bottom: 0;
+}
+.card:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  }
+
+.btn-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+  }

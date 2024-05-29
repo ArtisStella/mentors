@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ContactUs@MentorConnects</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-ZfZ6f/+86srxWXcEF+ZUr9zawxyb8SkE4h+6BMBi7BFoBcrQo+zsMcb/lmx7tJ0oV8mPRZ5wyg0xftya36f7jQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}"> 
+	<link rel="stylesheet" href="/frontend/auth.css">
+    
+
+    
+
+</head>
+<body>
+    {% if message %}
+    <div class="success-message">{{ message }}</div>
+    {% endif %}
+
+<div class="container" id="container">
+    <div class="form-container emailus-container">
+        <form action="{{ url_for('emailus') }}" method="post">
+            <h1 style="color: #357CA5;">Email Us Now</h1> <br>
+           <!-- <div class="msg">{{ message }}</div>-->
+            <span style="color: #357CA5;">Send us a message via email.</span>
+            <input id="email" name="email" type="email" placeholder="Your Email" autocomplete="off"/>
+            <textarea id="usermsg" name="usermsg" placeholder="Write us an email" autocomplete="off" style="height: 100px; width: 280px; padding: 10px;" maxlength="250"></textarea>
+            <br><button type="submit">Send Email</button>
+            <br>
+            <a href="{{ url_for('home') }}"  style="color: #357CA5; text-decoration: none;">Back home</a>
+        </form> 
+    </div>
+    <div class="form-container newsletter-container">
+        <!--<a href="{{url_for('home')}}" style=" text-decoration: underline; text-align: center; color: #357CA5;">Back to home</a> -->
+        <form action="{{ url_for('subscribe') }}" method="post">
+            <h1 style="color: #357CA5;">Subscribe to our Newsletter</h1> 
+            <!--<div class="msg">{{ msg }}</div> --> <br>
+            <span style="color: #357CA5;">Subscribe to receive updates and news.</span>
+            <input id="email" name="email" type="email" placeholder="Your Email" autocomplete="off"/><br>
+            <button type="submit">Subscribe</button><br>
+            <a href="{{ url_for('home') }}"  style="color: #357CA5; text-decoration: none;">Back home</a>
+
+        </form>
+    </div>
+    <div class="overlay-container">
+        <div class="overlay">
+            <div class="overlay-panel leftoverlay">
+                <h1>Welcome to MentorConnects!</h1>
+                <p>Subscribe to our mentor connect newsletter to receive updates and news</p>
+                <button class="ghost" id="newsLetter">Subscribe</button>
+            </div>
+            <div class="overlay-panel rightoverlay">
+                <h1>Want to send us a message?</h1>
+                <br><br>
+                <button class="ghost" id="emailUs">Email Us</button><br><br>
+                
+            </div>
+        </div>
+</div>
+
+
+<footer>
+</footer>
+
+<script>
+    const emailUsButton = document.getElementById('emailUs');
+	const newsLetterButton = document.getElementById('newsLetter');
+	const container = document.getElementById('container');
+	
+	emailUsButton.addEventListener('click', () => {
+		container.classList.add("right-panel-active");
+	});
+	
+	newsLetterButton.addEventListener('click', () => {
+		container.classList.remove("right-panel-active");
+	});
+    window.onload = function() {
+        document.getElementById('email').value = '';
+    };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication@MentorConnects</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-ZfZ6f/+86srxWXcEF+ZUr9zawxyb8SkE4h+6BMBi7BFoBcrQo+zsMcb/lmx7tJ0oV8mPRZ5wyg0xftya36f7jQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}"> 
+	<link rel="stylesheet" href="/frontend/auth.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}"> 
+	<link rel="stylesheet" href="/frontend/auth.css">
+
+</head>
+<body>
+<div class="container" id="container">
+	<div class="form-container sign-up-container">
+		<form action="{{ url_for('register') }}" method="post">
+			<h1>Create Account</h1>
+			<div class="msg">{{ msg }}</div>
+			<div class="social-container">
+				<a href="/loginwithgoogle" class="social"><i class="fab fa-google"></i></a>
+			</div>
+			<span>or use your email for registration</span>
+			<input id="username" name="username" type="text" placeholder="Name" autocomplete="off" />
+			<input id="email" name="email" type="email" placeholder="Email"  autocomplete="off"/>
+			<input id="password" name="password" type="password"  placeholder="Password" autocomplete="off"/>
+			<input id="email" name="email" type="email" placeholder="Email"  autocomplete="off"/>
+			<input id="password" name="password" type="password"  placeholder="Password" autocomplete="off"/>
+			<button type="submit">Sign Up</button><br>
+            <a href="{{ url_for('home') }}"  style="color: #357CA5; text-decoration: none;">Back home</a>
+		</form>
+	</div>
+	<div class="form-container sign-in-container">
+		<form action="{{ url_for('login') }}" method="post">
+			<h1>Sign in</h1>
+			<div class="msg">{{ msg }}</div>
+			<div class="social-container">
+				<a href="/loginwithgoogle" class="social"><i class="fab fa-google"></i></a>
+			</div>
+			<span>or use your account</span>
+			<input id="username" name="username" type="text"  placeholder="Username" autocomplete="off"/>
+			<input id="password" name="password" type="password"  placeholder="Password" autocomplete="off" />
+			<a href="/forgotpass" style="color: #357CA5; text-decoration: none;">Forgot your password?</a> 
+			<input type="submit" value="Sign In">
+			<br>
+            <a href="{{ url_for('home') }}" style="color: #357CA5; text-decoration: none;">Back home</a>
+			<!-- <button type="submit">Sign In</button> -->
+		</form>
+	</div>
+	<div class="overlay-container">
+		<div class="overlay">
+			<div class="overlay-panel leftoverlay">
+				<h1>Welcome Back!</h1>
+				<p>To keep connected with us please login.</p>
+				<button class="ghost" id="signIn">Sign In</button>
+			</div>
+			<div class="overlay-panel rightoverlay">
+				<h1>New User?</h1>
+				<p>Enter your personal details and start your PHD journey with us.</p>
+				<button class="ghost" id="signUp">Sign Up</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	const signUpButton = document.getElementById('signUp');
+	const signInButton = document.getElementById('signIn');
+	const container = document.getElementById('container');
+	
+	signUpButton.addEventListener('click', () => {
+		container.classList.add("right-panel-active");
+	});
+	
+	signInButton.addEventListener('click', () => {
+		container.classList.remove("right-panel-active");
+	});
+	window.onload = function() {
+    document.getElementById('username').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('password').value = '';
+};
+	</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ForgotPassword@MentorConnects</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-ZfZ6f/+86srxWXcEF+ZUr9zawxyb8SkE4h+6BMBi7BFoBcrQo+zsMcb/lmx7tJ0oV8mPRZ5wyg0xftya36f7jQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}"> 
+	<link rel="stylesheet" href="/frontend/auth.css">
+</head>
+<body>
+     {% if message %}
+    <div class="success-message">{{ message }}</div>
+    {% endif %} 
+    
+<div class="reviewcontainer" id="reviewcontainer">
+    <div class="reviewform-container reviewus-container">
+        <form action="{{ url_for('updatepassword') }}" method="post">
+            <h1 style="color: #357CA5;">Forgot Password!</h1> <br>
+            <div class="msg">{{ message }}</div>
+            <div class="message">{{ message }}</div>
+            <div class="msg">{{ msg }}</div>
+            <input id="username" name="username" type="text" placeholder="Name" autocomplete="off" />
+			<input id="oldpassword" name="oldpassword" type="password" placeholder="Old Password"  autocomplete="off"/>
+			<input id="newpassword" name="newpassword" type="password"  placeholder="New Password" autocomplete="off"/>
+			<button type="submit">Update Password</button><br>
+        </form>
+    </div>
+   
+
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Mobirise v5.9.13, a.mobirise.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  <meta name="description" content="Explore a collection of research papers and theses on various topics.">
+  <title>ResearchPapers@MentorConnects</title>
+  <link rel="stylesheet" href="/frontend/index.css">	
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+  <script src="../frontend/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../frontend/assets/web/assets/jquery/jquery.min.js"></script>
+  <script src="../frontend/assets/ytplayer/index.js"></script>
+  <script src="../frontend/assets/vimeoplayer/player.js"></script>
+  <script src="../frontend/assets/tether/tether.min.js"></script>
+  <script src="../frontend/assets/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../frontend/assets/dropdown/js/nav-dropdown.js"></script>
+  <script src="../frontend/assets/theme/js/script.js"></script>
+  <script src="../frontend/assets/smoothscroll/smooth-scroll.js"></script>
+  <script src="../frontend/assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="../frontend/assets/masonry/masonry.pkgd.min.js"></script>
+  
+  <link rel="stylesheet" href="https://r.mobirisesite.com/410531/assets/web/assets/mobirise-icons2/mobirise2.css?rnd=1714224106662">
+  <link rel="stylesheet" href="https://r.mobirisesite.com/410531/assets/web/assets/mobirise-icons2/mobirise2.css?rnd=1714224106662">
+  <link rel="stylesheet" href="https://r.mobirisesite.com/410531/assets/bootstrap/css/bootstrap.min.css?rnd=1714224106663">
+  <link rel="stylesheet" href="https://r.mobirisesite.com/410531/assets/bootstrap/css/bootstrap-grid.min.css?rnd=1714224106663">
+  <link rel="stylesheet" href="https://r.mobirisesite.com/410531/assets/bootstrap/css/bootstrap-reboot.min.css?rnd=1714224106663">
+  <link rel="stylesheet" href="https://r.mobirisesite.com/410531/assets/theme/css/style.css?rnd=1714224106663">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap&display=swap">
+  <link rel="stylesheet" href="https://r.mobirisesite.com/410531/assets/css/mbr-additional.css?rnd=1714224106663" type="text/css">
+  
+  <style>
+        .header18 {
+            background: url('/frontend/images/researchpaprs.jpeg') no-repeat center center;
+            background-size: cover;
+            height: 100vh; 
+        }
+
+    </style>
+  
+</head>
+<body>
+   
+<!---------------------------------NAVBAR------------------------------------------------------->
+<nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+    <div class="container">
+    <a href="{{url_for('home') }} " class="navbar-brand  align-items-center">
+        <h2 style="color:#357CA5;" class="m-0 navbar-logocolor" ><i class="fa fa-book me-3"></i>MentorConnect</h2>
+    </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavv" aria-controls="navbarNavv" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavv">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="{{url_for('home') }}" class="nav-item nav-link ">Home</a>
+                <div class="nav-item dropdown">
+                    <a  class="nav-link dropdown-toggle active" href="#" onclick="toggleDropdownMenu()">Search</a>
+                    <ul class="dropdown-menu" id="dropdownMenu">
+                        <li><a class="dropdown-item" href="{{ url_for('search') }}" >Search By Domain</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('abstract') }}" >Search By Abstract</a></li>
+                        <li><a class="dropdown-item active" href="{{ url_for('researchpapers') }}" >Research Papers</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('trending') }}" >Explore Your Interests</a></li>
+                    </ul> 
+                </div>
+                <a href="{{url_for('review')}}" class="nav-item nav-link">Review</a>
+                <a href="{{url_for('newsletter') }}" class="nav-item nav-link">Contact</a>
+            </div>
+            <a href="{{ url_for('userlogin') }}" class="btn navbar-btn py-3 px-lg-4" style="background-color: #357CA5;">Join Now</a>
+            {% if useronline or googleuser or loggedin  %}
+                <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+            {% endif %}
+        </div> 
+    </div>
+</nav>
+
+
+    <!-----------------------------VIDEO----------------------->
+  <!-- <section data-bs-version="5.1" class="header18 cid-ub7S81ngjw mbr-fullscreen" data-bg-video="https://www.youtube.com/embed/mysrzOT0iJs?autoplay=1&amp;loop=1&amp;playlist=mysrzOT0iJs&amp;t=20&amp;mute=1&amp;playsinline=1&amp;controls=0&amp;showinfo=0&amp;autohide=1&amp;allowfullscreen=true&amp;mode=transparent" id="hero-16-ub7S81ngjw">
+  
+    --> 
+    <section data-bs-version="5.1" class="header18 cid-ub7S81ngjw mbr-fullscreen">
+     
+  <div class="mbr-overlay" style="opacity: 0.5; background-color: rgb(0, 0, 0);"></div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="content-wrap col-12 col-md-12">
+        <h1 class="mbr-section-title mbr-fonts-style mbr-white mb-4 display-1" style="color: white;" >
+          <strong>Discover Now</strong>
+        </h1>
+        
+        <p class="mbr-fonts-style mbr-text mbr-white mb-4 display-7">Unleash the Power of Knowledge with a Click - Dive into a World of Trending Research and Thesis</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!----------------------------------------ABOUT RESEARCH---------------------------------------------->
+<section data-bs-version="5.1" class="article4 cid-ub7S81nYKZ" id="generic-text-4-ub7S81nYKZ">
+		<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-12 col-md-12 col-lg-6 image-wrapper">
+				<img class="w-100" src="../frontend/assets/images/photo-1619680333072-3e947c65f4a3.jpeg" alt="Mobirise Website Builder">
+			</div>
+			<div class="col-12 col-md-12 col-lg">
+				<div class="text-wrapper align-left">
+					<h1 class="mbr-section-title mbr-fonts-style mb-4 display-2">
+						<strong>Unleash Wisdom</strong>
+					</h1>
+					<p class="mbr-text mbr-fonts-style mb-3 display-7">Embark on a quest for enlightenment as you delve into groundbreaking research and thought-provoking theses.</p>
+
+					<p class="mbr-text mbr-fonts-style mb-3 display-7">Expand your mind and broaden your perspectives with just a simple click.</p>
+					<p class="mbr-text mbr-fonts-style mb-3 display-7">Ignite your passion for learning and exploration with Researchify.</p>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!---------------------------------------LINKS PAPERS----------------------------------------------------->
+<section data-bs-version="5.1" class="list1 cid-ub9r2vfc6y" id="list01-0">	
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-12 col-md-12 col-lg-10 m-auto">
+				<div class="content">
+					<div class="row justify-content-center mb-5">
+						<div class="col-12 content-head">
+							<div class="mbr-section-head">
+								<h4 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2"><strong>Explore Now!</strong></h4>
+								
+							</div>
+						</div>
+					</div>
+					<div id="bootstrap-accordion_10" class="panel-group accordionStyles accordion" role="tablist" aria-multiselectable="true">
+						<div class="card">
+							<div class="card-header" role="tab" id="headingOne">
+								<a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse1_10" aria-expanded="false" aria-controls="collapse1">
+									<h6 class="panel-title-edit mbr-semibold mbr-fonts-style mb-0 display-5">Research Papers</h6>
+									<span class="sign mbr-iconfont mobi-mbri-arrow-down"></span>
+								</a>
+							</div>
+							<div id="collapse1_10" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_10">
+								<div class="panel-body">
+									<ul>
+                                        <li><a href="https://drive.google.com/drive/folders/1QtjI1pHmnUzkkwj2j2B5B5k0Ege_aS50?usp=drive_link" class="topic-button" style="color: blue;">Internet of Things</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1ySSqeJY36C-L9JZP1LESRBk8Q49RUID_?usp=drive_link" class="topic-button" style="color: blue;">Machine Learning</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/11d-dNsf3eXsWWHZtAcBUfr1sPyFMiyKy?usp=drive_link" class="topic-button" style="color: blue;">Blockchains</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1wDPiKQuSpFnarRFcO7pktoszcyWXbOAN?usp=drive_link" class="topic-button" style="color: blue;">Vehicular Ad Hoc Networks (VANET)</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1SjA3JYAU13QfwSFmFhVFwhxsnT4MEkrT?usp=drive_link" class="topic-button" style="color: blue;">Wireless Sensor Networks</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1xNgYBuZwrMt_vi9VXtkpDCSKuJi1xk28?usp=drive_link" class="topic-button" style="color: blue;">Cloud Computing</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1obyDVR4TFNHztRc0kwNTdKN73PdXxEjm?usp=drive_link" class="topic-button" style="color: blue;">Fog Computing</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1CwER4Q1nrbXohwx5oERMgYnBu6Meb-6g?usp=drive_link" class="topic-button" style="color: blue;">Edge Computing</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1zoESaBLI4dt0GhjyEzG3Mf4RakZ5aUcX?usp=drive_link" class="topic-button" style="color: blue;">Cloud Security</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1fqPEopmml1loY-JNGpzyFCBgXFEzAlev?usp=drive_link" class="topic-button" style="color: blue;">Mobile Cloud Computing (MCC)</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/12_vOsiEgL_a-KX_ls7hd9q90aQAY1nEc?usp=drive_link" class="topic-button" style="color: blue;">Data Mining</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1tFTB3SbmQiNE0RmctiuXQnl8MlgJLY6b?usp=drive_link" class="topic-button" style="color: blue;">Big Data</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/13VScBoT04wtoyG4L8adYFAkrrGkQKiyO?usp=drive_link" class="topic-button" style="color: blue;">Web Technology</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1fqPEopmml1loY-JNGpzyFCBgXFEzAlev?usp=drive_link" class="topic-button" style="color: blue;">Mobile Ad Hoc Networks (MANET)</a></li>
+                                        
+                                    </ul>
+								</div>
+							</div>
+						</div>
+						<div class="card">
+							<div class="card-header" role="tab" id="headingOne">
+								<a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse2_10" aria-expanded="false" aria-controls="collapse2">
+									<h6 class="panel-title-edit mbr-semibold mbr-fonts-style mb-0 display-5">Theses</h6>
+									<span class="sign mbr-iconfont mobi-mbri-arrow-down"></span>
+								</a>
+							</div>
+							<div id="collapse2_10" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_10">
+								<div class="panel-body">
+									<ul>
+                                        <li><a href="https://drive.google.com/drive/folders/18z8QTNT8mx6xw3hkP-6pKzfKAkab9gul?usp=drive_link" class="topic-button">Internet of Things</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1UA1raVisHXz1-EbxdjbJTrvg4wAkggFJ?usp=drive_link" class="topic-button">Machine Learning</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1_JMZQ8PPv9it3o9GUuC8y7Oi7KzilFZG?usp=drive_link" class="topic-button">Blockchains</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1BITxpTbDGg6BKxpCggqyyr4s7CPdFFaP?usp=drive_link" class="topic-button">Vehicular Ad Hoc Networks (VANET)</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1IQpUQjwgsdkq3ZD-64iYgdfXl7XuM12P?usp=drive_link" class="topic-button">Wireless Sensor Networks</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1K1wG33h8V9voSom__DEIPgH1rtAijTiN?usp=drive_link" class="topic-button">Cloud Computing</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1wASGQVRYRrcBlML9f7D8xC8w6Th7w6F9?usp=drive_link" class="topic-button">Fog Computing</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1wbJFgluL-Xjsy4z1qZ3I88iRMzG0rapG?usp=drive_link" class="topic-button">Edge Computing</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/14e0GJNdDq-n6XojzAZ1qvgGKdgshRXyC?usp=drive_link" class="topic-button">Cloud Security</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1WWt9uNQHENG9WlIEv659Z8cWaILWfnht?usp=drive_link" class="topic-button">Mobile Cloud Computing (MCC)</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1IozLWzQkLT43Qy0zpSN_A6gD6Are6hLg?usp=drive_link" class="topic-button">Data Mining</a></li>
+                                        <li><a href="https://drive.google.com/drive/folders/1PW4zuDYg9AbknTujou_2TgBeI8uNuQRz?usp=drive_link" class="topic-button">Data Forensics</a></li>
+                                        
+                                    </ul>
+								</div>
+							</div>
+						</div>
+						
+</section>
+
+<!--------------------------------------REVIEW CARDS-------------------------------------------->
+<section data-bs-version="5.1" class="features21 cid-ub7S81n1MF" id="features-4-ub7S81n1MF">
+    <div class="container">
+        
+        <div class="row mbr-masonry" data-masonry="{&quot;percentPosition&quot;: true }">
+            <div class="item features-without-image col-12 col-md-6 col-lg-4">
+                <div class="item-wrapper">
+                    <div class="card-box align-left">
+                        <div class="img-wrapper mb-3">
+                            <img src="../frontend/assets/images/photo-1614899417406-e6f8485cd279.jpeg">
+                        </div>
+                        <h5 class="card-title mbr-fonts-style display-5">
+                            <strong>Easy Access</strong>
+                        </h5>
+                        <p class="card-text mbr-fonts-style display-7">Seamlessly navigate through a curated collection of research papers and theses with ease.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="item features-without-image col-12 col-md-6 col-lg-4">
+                <div class="item-wrapper">
+                    <div class="card-box align-left">
+                        <div class="img-wrapper mb-3">
+                            <img src="../frontend/assets/images/photo-1618933974351-e38629016464.jpeg">
+                        </div>
+                        <h5 class="card-title mbr-fonts-style display-5">
+                            <strong>Diverse Topics</strong>
+                        </h5>
+                        <p class="card-text mbr-fonts-style display-7">Explore a wide range of subjects from quantum physics to ancient history in one place.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="item features-without-image col-12 col-md-6 col-lg-4">
+                <div class="item-wrapper">
+                    <div class="card-box align-left">
+                        <div class="img-wrapper mb-3">
+                            <img src="../frontend/assets/images/photo-1619680333072-3e947c65f4a3.jpeg">
+                        </div>
+                        <h5 class="card-title mbr-fonts-style display-5">
+                            <strong>Interactive Experience</strong>
+                        </h5>
+                        <p class="card-text mbr-fonts-style display-7">An interactive platform that brings research and theses to life.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="item features-without-image col-12 col-md-6 col-lg-4">
+                <div class="item-wrapper">
+                    <div class="card-box align-left">
+                        <div class="img-wrapper mb-3">
+                            <img src="../frontend/assets/images/photo-1523215122-26803239f41f.jpeg">
+                        </div>
+                        <h5 class="card-title mbr-fonts-style display-5">
+                            <strong>Limitless Knowledge</strong>
+                        </h5>
+                        <p class="card-text mbr-fonts-style display-7">Unlock a limitless well of knowledge and insights waiting to be discovered.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="item features-without-image col-12 col-md-6 col-lg-4">
+                <div class="item-wrapper">
+                    <div class="card-box align-left">
+                        <div class="img-wrapper mb-3">
+                            <img src="../frontend/assets/images/photo-1517673132405-a56a62b18caf.jpeg">
+                        </div>
+                        <h5 class="card-title mbr-fonts-style display-5">
+                            <strong>Engaging Content</strong>
+                        </h5>
+                        <p class="card-text mbr-fonts-style display-7">Engage with content that challenges your intellect and sparks curiosity.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="item features-without-image col-12 col-md-6 col-lg-4">
+                <div class="item-wrapper">
+                    <div class="card-box align-left">
+                        <div class="img-wrapper mb-3">
+                            <img src="../frontend/assets/images/photo-1554896541-dff010081afe.jpeg">
+                        </div>
+                        <h5 class="card-title mbr-fonts-style display-5">
+                            <strong>Stay Curious</strong>
+                        </h5>
+                        <p class="card-text mbr-fonts-style display-7">Fuel your curiosity and thirst for knowledge with a never-ending stream of research and theses.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!------------------------------------100+PAPERS------------------------------------------------------->
+<section data-bs-version="5.1" class="features023 cid-ub7S81oH5C" id="metrics-1-ub7S81oH5C">
+    <div class="container">
+        
+        <div class="row content-row justify-content-center">
+            <div class="item features-without-image col-12 col-md-6 col-lg-4 item-mb">
+                <div class="item-wrapper">
+                    <div class="title mb-2 mb-md-3">
+                        <span class="num mbr-fonts-style display-1">
+                            <strong>150+</strong></span>
+                    </div>
+                    <h4 class="card-title mbr-fonts-style display-5">
+                        <strong>Papers Published</strong>
+                    </h4>
+                    
+                </div>
+            </div>
+            <div class="item features-without-image col-12 col-md-6 col-lg-4 item-mb">
+                <div class="item-wrapper">
+                    <div class="title mb-2 mb-md-3">
+                        <span class="num mbr-fonts-style display-1">
+                            <strong>100+</strong></span>
+                    </div>
+                    <h4 class="card-title mbr-fonts-style display-5">
+                        <strong>Theses Available</strong>
+                    </h4>
+                    
+                </div>
+            </div>
+            <div class="item features-without-image col-12 col-md-6 col-lg-4 item-mb">
+                <div class="item-wrapper">
+                    <div class="title mb-2 mb-md-3">
+                        <span class="num mbr-fonts-style display-1">
+                            <strong>99%</strong></span>
+                    </div>
+                    <h4 class="card-title mbr-fonts-style display-5">
+                        <strong>User Satisfaction</strong>
+                    </h4>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!------------------------------------QUESTIONS TO ASK--------------------------------------------------->
+<section data-bs-version="5.1" class="list1 cid-ub7S81oUlu" id="faq-1-ub7S81oUlu">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-12 col-lg-10 m-auto">
+                <div class="content">
+                    <div class="row justify-content-center mb-5">
+                        <div class="col-12 content-head">
+                            <div class="mbr-section-head">
+                                <h4 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2">
+                                    <strong>Curious Minds Ask</strong>
+                                </h4>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div id="bootstrap-accordion_4" class="panel-group accordionStyles accordion" role="tablist" aria-multiselectable="true">
+                        <div class="card">
+                            <div class="card-header" role="tab" id="headingOne">
+                                <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse1_4" aria-expanded="false" aria-controls="collapse1">
+                                    <h6 class="panel-title-edit mbr-semibold mbr-fonts-style mb-0 display-5">How do I access papers?</h6>
+                                    <span class="sign mbr-iconfont mobi-mbri-arrow-down"></span>
+                                </a>
+                            </div>
+                            <div id="collapse1_4" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_4">
+                                <div class="panel-body">
+                                    <p class="mbr-fonts-style panel-text display-7">Simply click on the tabs to unveil a world of knowledge waiting for you!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" role="tab" id="headingOne">
+                                <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse2_4" aria-expanded="false" aria-controls="collapse2">
+                                    <h6 class="panel-title-edit mbr-semibold mbr-fonts-style mb-0 display-5">Can I download papers?</h6>
+                                    <span class="sign mbr-iconfont mobi-mbri-arrow-down"></span>
+                                </a>
+                            </div>
+                            <div id="collapse2_4" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_4">
+                                <div class="panel-body">
+                                    <p class="mbr-fonts-style panel-text display-7">Absolutely! Download, read, and enlighten yourself with groundbreaking research.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" role="tab" id="headingOne">
+                                <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse3_4" aria-expanded="false" aria-controls="collapse3">
+                                    <h6 class="panel-title-edit mbr-semibold mbr-fonts-style mb-0 display-5">Are the papers free?</h6>
+                                    <span class="sign mbr-iconfont mobi-mbri-arrow-down"></span>
+                                </a>
+                            </div>
+                            <div id="collapse3_4" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_4">
+                                <div class="panel-body">
+                                    <p class="mbr-fonts-style panel-text display-7">Yes, all papers are accessible for free to fuel your thirst for discovery.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" role="tab" id="headingOne">
+                                <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse4_4" aria-expanded="false" aria-controls="collapse4">
+                                    <h6 class="panel-title-edit mbr-semibold mbr-fonts-style mb-0 display-5">How often are papers updated?</h6>
+                                    <span class="sign mbr-iconfont mobi-mbri-arrow-down"></span>
+                                </a>
+                            </div>
+                            <div id="collapse4_4" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_4">
+                                <div class="panel-body">
+                                    <p class="mbr-fonts-style panel-text display-7">Stay tuned for regular updates as we bring you the latest in research and thesis works.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" role="tab" id="headingOne">
+                                <a role="button" class="panel-title collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-core="" href="#collapse5_4" aria-expanded="false" aria-controls="collapse5">
+                                    <h6 class="panel-title-edit mbr-semibold mbr-fonts-style mb-0 display-5">Can I contribute my work?</h6>
+                                    <span class="sign mbr-iconfont mobi-mbri-arrow-down"></span>
+                                </a>
+                            </div>
+                            <div id="collapse5_4" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion" data-bs-parent="#bootstrap-accordion_4">
+                                <div class="panel-body">
+                                    <p class="mbr-fonts-style panel-text display-7">We welcome contributions from visionaries like you to expand the realm of knowledge.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--------------------------------------------FOOTER--------------------------------------------->
+<footer>
+	<div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+		<div class="container py-5">
+			<div class="row ">
+				<div class="col-lg-3 col-md-6" >
+					<h4 class="text-white mb-3">Quick Link</h4>
+					<a class="btn btn-link" href="{{url_for('home')}}">About Us</a><br>
+					<a class="btn btn-link" href="{{url_for('newsletter')}}">Contact Us</a><br>
+					<a class="btn btn-link" href="{{url_for('register')}}">Join Now</a>
+				</div>
+
+				<div class="col-lg-3 col-md-6">
+					<h4 class="text-white mb-3">Contact</h4>
+					<a class="btn btn-outline-light btn-social" href="{{url_for('newsletter')}}"><i class="fa fa-envelope me-3"></i>Contact us</a>
+				</div>
+
+				<div class="col-lg-3 col-md-6">
+					<h4 class="text-white mb-3">Gallery</h4>
+					<div class="row g-2 pt-2">
+						<div class="col-4">
+							<img class="img-fluid bg-light p-1" src="../frontend/images/team-1.jpg"> 
+						</div>
+						<div class="col-4">
+							<img class="img-fluid bg-light p-1" src="../frontend/images/team-2.jpg">
+						</div>
+						<div class="col-4">
+							<img class="img-fluid bg-light p-1" src="../frontend/images/team-3.jpg">
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-6">
+					<h4 class="text-white mb-3">Newsletter</h4>
+					<div class="position-relative mx-auto" style="max-width: 400px;">
+						<input class="form-control border-0 w-100 py-3 ps-4 pe-5" type="none" placeholder="Your email">
+						<a class="btn btn-outline-light btn-social btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2" href="{{url_for('newsletter')}}">Join Now</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div style="text-align: center;">
+			&copy; <a class="border-bottom" href="{{url_for('home')}}">MentorConnects</a>, All Right Reserved.
+		</div>
+</footer>
+<!---------------------------------SCRIPT FOR RESEARCH PAPERS---------------------------------------------->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toastElements = [
+            document.getElementById('liveToast1'),
+            document.getElementById('liveToast2')
+        ];
+
+        let index = 0;
+
+        function showNextToast() {
+            const currentToast = toastElements[index];
+            const toastBootstrap = new bootstrap.Toast(currentToast);
+            toastBootstrap.show();
+            index = (index + 1) % toastElements.length;
+        }
+        showNextToast();
+        setInterval(showNextToast, 5000);
+    });
+</script>
+
+<!------------------------------NAVBAR SRCIPT----------------------------------------->
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  <!--navbar working-->
+<script>
+    function toggleDropdownMenu() {
+        var dropdownMenu = document.getElementById("dropdownMenu");
+        if (dropdownMenu.style.display === "block") {
+            dropdownMenu.style.display = "none";
+        } else {
+            dropdownMenu.style.display = "block";
+        }
+    }
+
+    function navigateTo(route) {
+        window.location.href = "{{ url_for('home') }}";
+    }
+</script> 
+  <script src="assets/web/assets/jquery/jquery.min.js"></script>
+  <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/smoothscroll/smooth-scroll.js"></script>
+  <script src="assets/ytplayer/index.js"></script>
+  <script src="assets/vimeoplayer/player.js"></script>
+  <script src="assets/mbr-switch-arrow/mbr-switch-arrow.js"></script>
+  <script src="assets/masonry/masonry.pkgd.min.js"></script>
+  <script src="assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="assets/theme/js/script.js"></script>
+  
+  
+  
+</body>
+</html>

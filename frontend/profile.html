@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-nRF6/b1cBphl0LvX1rfQnZZJufqvYZqa4DE3cMzNcTEqJjRbq5QnPBJX5E6FO/eLRb2jqbm+2m7CrG7tzUgW+A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <title>Profile@MentorConnects</title>
+</head>
+<body>
+<div lcass= "wrapper">
+    <!-----------------------------NAVBAR--------------------------->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow sticky-top">
+        <div class="container">
+            <a class="navbar-brand align-items-center" href="{{url_for('home')}}">
+                <h2 style="color:#357CA5;" class="m-0 navbar-logocolor"><i class="fas fa-book me-3"></i>MentorConnect</h2>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavv" aria-controls="navbarNavv" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavv">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{url_for('home')}}">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            Search
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><a class="dropdown-item" href="{{url_for('search')}}">Search By Domain</a></li>
+                            <li><a class="dropdown-item" href="{{url_for('abstract')}}">Search By Abstract</a></li>
+                            <li><a class="dropdown-item" href="{{url_for('researchpapers')}}">Research Papers</a></li>
+                            <li><a class="dropdown-item" href="{{url_for('trending')}}">Explore Your Interests</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('review')}}">Review</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('newsletter')}}">Contact</a>
+                    </li>
+                </ul>
+                <a href="{{url_for('userlogin')}}" class="btn navbar-btn py-3 px-lg-4" style="background-color: #357CA5;">Join Now</a>
+                {% if useronline or googleuser or loggedin %}
+                <a class="nav-item nav-link" href="{{url_for('logout')}}">Logout</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    
+
+ 
+<!-------------------------------------------------------------------------------------------->
+<!-- Carousel -->
+<div id="carouselWrapper" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="frontend/images/c1.jpg" class="d-block w-100" alt="...">
+            <div class="carousel-caption  justify-content-center align-items-center text-center">
+                <h1 class="carousel-title">Find Your Computer Science Professor</h1>
+                <p class="carousel-text">Connecting You with Experts in the Field</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="frontend/images/c2.jpg" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-flex justify-content-center align-items-center text-center">
+                <h1 class="carousel-title">Find Your Computer Science Professor</h1>
+                <p class="carousel-text">Discover Top Talent in Computer Science</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="frontend/images/c3.jpg" class="d-block w-100" alt="background image">
+            <div class="carousel-caption d-flex justify-content-center align-items-center text-center">
+                <h1 class="carousel-title">Find Your Computer Science Professor</h1>
+                <p class="carousel-text">Empowering Your Learning Journey</p>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselWrapper" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselWrapper" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<!-----------------------------------------SEARCH RESULT---------------------->
+<div class="container-fluid">
+    <div class="row">
+        <!-- left side of the box (prof main details) -->
+        <div class="col-md-6 bg-darkblue text-center text-white p-5">
+            <img id="profilePic" src="frontend/images/la.png" alt="Profile Picture" class="rounded-circle" style="width: 300px; height: 300px;">
+            <h1 class="mt-4 mb-3" id="profileName"></h1> 
+            <h5 id="profileDesignation"></h5> 
+            <br>
+            <div id="emailButtonContainer">
+                <button class="btn btn-primary" style="background-color: #357CA5;" onclick="openEmail()" id="profileEmailButton">Email</button> 
+            </div>
+        </div>
+        <!-- Right side of the box (prof extra details) -->
+        <div class="col-md-6 bg-lightblue text-center p-5">
+            <div class="card-container">
+                <blockquote class="blockquote mt-4">
+                    <p class="mb-0"><span style="color: black; font-family: Candara;">Education</span> is our passport to the future, for tomorrow belongs only to the people who prepare for it today.</p>
+                </blockquote>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Country</h5>
+                        <p class="card-text" id="profileCountry"></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Research Interest</h5>
+                        <p class="card-text" id="profileResearchInterest"></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">University</h5>
+                        <p class="card-text" id="profileUniversity"></p>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+</div>
+
+
+<!--------------------------------------------FOOTER--------------------------------------------->
+<footer>
+    <div class="container-fluid bg-dark text-light footer pt-5 mt-0 wow fadeIn" data-wow-delay="0.1s">
+		<div class="container py-5">
+			<div class="row ">
+				<div class="col-lg-3 col-md-6" >
+					<h4 class="text-white mb-3" >Quick Link</h4>
+					<a class="btn btn-link" style="color:#357CA5;" href="{{url_for('home')}}">About Us</a><br>
+					<a class="btn btn-link" style="color:#357CA5;" href="{{url_for('newsletter')}}">Contact Us</a><br>
+					<a class="btn btn-link" style="color:#357CA5;" href="{{url_for('register')}}">Join Now</a>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<h4 class="text-white mb-3">Contact</h4>
+					<a class="btn btn-outline-light btn-social" href="{{url_for('newsletter')}}"><i class="fa fa-envelope me-3"></i>Contact us</a>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<h4 class="text-white mb-3">Gallery</h4>
+					<div class="row g-2 pt-2">
+						<div class="col-4">
+							<img class="img-fluid bg-light p-1" src="../frontend/images/team-1.jpg"> 
+						</div>
+						<div class="col-4">
+							<img class="img-fluid bg-light p-1" src="../frontend/images/team-2.jpg">
+						</div>
+						<div class="col-4">
+							<img class="img-fluid bg-light p-1" src="../frontend/images/team-3.jpg">
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<h4 class="text-white mb-3">Newsletter</h4>
+					<div class="position-relative mx-auto" style="max-width: 400px;">
+						<input class="form-control border-0 w-100 py-3 ps-4 pe-5" type="none" placeholder="Your email">
+						<a class="btn btn-outline-light btn-social py-2 position-absolute top-0 end-0 mt-2 me-2" style="background-color:#357CA5;" href="{{url_for('newsletter')}}">Join Now</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="text-align: center;">
+			&copy; <a class="border-bottom" style="color:#357CA5;" href="{{url_for('home')}}">MentorConnects</a>, All Right Reserved.
+		</div>
+    </div>
+</footer>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<!----------------------------------SCRIPT FOR NAVBAR---------------------------------------------->
+<script>
+    function toggleDropdownMenu() {
+        var dropdownMenu = document.getElementById("dropdownMenu");
+        if (dropdownMenu.style.display === "block") {
+            dropdownMenu.style.display = "none";
+        } else {
+            dropdownMenu.style.display = "block";
+        }
+    }
+
+    function navigateTo(route) {
+        window.location.href = "{{ url_for('home') }}";
+    }
+</script>  
+<!------------------------------------SCRIPT FOR pictures swapping---------------------------------------------->
+<script>
+    setInterval(() => {
+        document.getElementById('profilePic').src = (document.getElementById('profilePic').src.endsWith('frontend/images/la.png')) ? 'frontend/images/kk.jpg' : 'frontend/images/la.png';
+    }, 3000);
+</script>
+<!------------------------------------SCRIPT FOR PROFESSORS---------------------------------------------->
+
+<script>
+    document.getElementById("profileEmailLink");
+</script>
+<script>
+ 
+    function getParameterByName(name) {
+        var url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    var name = getParameterByName('name');
+    var universityname = getParameterByName('universityname');
+    var email = getParameterByName('email');
+    var researchinterest = getParameterByName('researchinterest');
+    var designation = getParameterByName('designation');
+    var country = getParameterByName('country');
+
+    document.getElementById("profileName").textContent = name;
+    document.getElementById("profileUniversity").textContent = universityname;
+    document.getElementById("profileEmailButton").setAttribute("data-email", email); 
+    document.getElementById("profileResearchInterest").textContent =  researchinterest;
+    document.getElementById("profileDesignation").textContent = "Designation: " + designation;
+    document.getElementById("profileCountry").textContent =  country;
+</script>
+<script>
+    function openEmail() {
+        var email = document.getElementById("profileEmailButton").getAttribute("data-email"); 
+        var subject = "Subject of the email"; 
+        var body = "Body of the email"; 
+
+        var mailtoLink = "mailto:" + email + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+        window.location.href = mailtoLink;
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const toastTrigger = document.getElementById('liveToastBtn');
+      const toastLiveExample = document.getElementById('liveToast');
+
+      if (toastTrigger) {
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+        toastTrigger.addEventListener('click', () => {
+          toastBootstrap.show();
+        });
+      }
+    });
+</script>
+</body>
+</html>

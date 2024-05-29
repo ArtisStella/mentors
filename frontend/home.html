@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+    <meta charset="utf-8">
+    <title>Home@MentorConnects</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}"> 
+	<link rel="stylesheet" href="/frontend/home.css">			 
+	<link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}"> 
+	<link rel="stylesheet" href="/frontend/home.css">			 
+</head>
+<body>
+<div class="wrapper">
+	<!---------------------------------POP UP User Confirmation MESSAGES------------------------------------------------------->
+	<div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="popup-closeicon" onclick="ClosePopup()">&times;</span>
+            <div >
+                <div id="popup-msg">{{ msg }}</div>
+                {% if message %}
+                    <p>{{ message }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+	<!---------------------------------TOASTS----------------------------------->
+<!---------------------------------------LIVE TOAST-------------------------------------------------------------->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+	<div id="liveToast1" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+	  <div class="toast-header">
+		<i class="bi bi-arrow-right-circle-fill"></i>
+		<strong class="me-auto">Looking For Research Papers?</strong>
+		<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+	  </div>
+	  <div class="toast-body">
+		Dive into a world of <a href="{{ url_for('researchpapers') }}">research wonders</a>
+	  </div>
+	</div>
+	<div id="liveToast2" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+	  <div class="toast-header">
+		<i class="bi bi-arrow-right-circle-fill"></i>
+		<strong class="me-auto">Looking For Trending Topics? </strong>
+		<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+	  </div>
+	  <div class="toast-body">
+		Dive into a world of <a href="{{ url_for('trending_topics') }}">trending topics</a>
+	  </div>
+	</div>
+  </div>
+<!-------------------------------------------------------------------------------------------------------->
+
+	<!---------------------------------NAVBAR------------------------------------------------------->
+	<nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+		<div class="container">
+		<a href="{{url_for('home') }} " class="navbar-brand  align-items-center">
+			<h2 style="color:#357CA5;" class="m-0 navbar-logocolor" ><i class="fa fa-book me-3"></i>MentorConnect</h2>
+        </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavv" aria-controls="navbarNavv" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavv">
+				<div class="navbar-nav ms-auto p-4 p-lg-0">
+					<a href="{{url_for('home') }}" class="nav-item nav-link active">Home</a>
+					<div class="nav-item dropdown">
+						<a  class="nav-link dropdown-toggle" href="#" onclick="toggleDropdownMenu()">Search</a>
+						<ul class="dropdown-menu" id="dropdownMenu">
+							<li><a class="dropdown-item" href="{{ url_for('search') }}" >Search By Domain</a></li>
+							<li><a class="dropdown-item" href="{{ url_for('abstract') }}" >Search By Abstract</a></li>
+							<li><a class="dropdown-item" href="{{ url_for('researchpapers') }}" >Research Papers</a></li>
+							<li><a class="dropdown-item" href="{{ url_for('trending') }}" >Explore Your Interests</a></li>
+						</ul> 
+					</div>
+					<a href="{{url_for('review')}}" class="nav-item nav-link">Review</a>
+					<a href="{{url_for('newsletter') }}" class="nav-item nav-link">Contact</a>
+				</div>
+				<a href="{{ url_for('userlogin') }}" class="btn navbar-btn py-3 px-lg-4">Join Now</a>
+				{% if useronline or googleuser or loggedin  %}
+    				<a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+				{% endif %}
+            </div> 
+		</div>
+    </nav>
+
+
+	<!---------------------------------BACKGROUND PIC & TEXT & SEARCH BAR------------------------------------------------------->
+	<div class="jumbotron" style="background-image: url('../frontend/images/fypfinal.png');">
+		<!--div class="container"-->
+		<div class="row justify-content-start">
+			<div class="col-sm-9 col-lg-7">
+				<h1 class="display-2 animated slideInDown" style="color: white; font-weight: bold; ">Empowering Future Scholars</h1>
+				<p  class="fs-5 text-black mb-4 pb-2" >Hello {{session['name']}} {{session.username}}! Your Gateway to Global Education and Research</p>
+			</div>
+			<form id="searchForm" action="{{ url_for('search') }}" method="GET" style="display: inline-block; text-align: center;">
+				<div style="display: flex;">
+					<select id="topicSelect" onchange="updateSearchInput()" style="margin-right: 10px;">
+						<option value="">Select sub-domain...</option>
+						<option value="Topic 1">Machine Learning</option>
+						<option value="Topic 2">Distributed Computing</option>
+						<option value="Topic 3">Artificial Intelligence</option>
+						<option value="Topic 4">Cyber Security</option>
+						<option value="Topic 5">Blockchain</option>
+						<option value="Topic 6">IoT</option>
+					</select>
+					<input id="searchInput" type="text" name="query" placeholder="Search Professors" style="width: 450px; height: 35px;">
+					<button type="submit" class="button btn-primary" style="background-color:#357CA5;"><i class="fas fa-search"></i></button>
+				</div>
+			</form>
+		</div>	
+	</div>
+<!---------------------------------------ABOUT US---------------------------------------------------------------------->
+
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-6 wow fadeInUp">
+                <div class="position-relative h-100">
+                    <img class="img-fluid position-absolute w-100 h-100" src="../frontend/images/footerimg1.jpg" alt="" style="object-fit: cover;">
+                </div>
+            </div>
+            <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
+                <h2 style=" font-weight: bold; color:black;">About Us</h2>
+                <h1 style=" font-weight: bold; color:#357CA5;" class="mb-4">MentorConnect</h1>
+                <p class="mb-4">We envision a future where the process of identifying and connecting professors is no longer a daunting task. Instead, it's an efficient and straightforward experience that empowers PhD students to find the perfect mentors for their research and academic pursuits</p>
+                <div class="row gy-2 gx-4 mb-4">
+                    <div class="col-sm-6">
+                        <p class="mb-0"><i style="color:#357CA5;" class="fa fa-arrow-right  me-2"></i>Skilled Instructors</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p class="mb-0"><i style="color:#357CA5;" class="fa fa-arrow-right  me-2"></i>Dedication to Efficiency</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p class="mb-0"><i style="color:#357CA5;" class="fa fa-arrow-right me-2"></i>Global Reach</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p class="mb-0"><i style="color:#357CA5;" class="fa fa-arrow-right  me-2"></i>User Friendly Interface</p>
+                    </div>
+                    <br>
+                </br>
+                <div style="display: flex; text-align: center;" >
+                    <a style="background:#357CA5; color: white;" class="btn  py-3 px-5 mt-2" href="{{url_for('abstract')}}" style="display: inline-block; margin-right: 5px;">Search</a>
+                    <a style="background:#357CA5; color: white; display: inline-block; margin-left: 170px;" class="btn  py-3 px-5 mt-2" href="{{ url_for('userlogin') }}">Join</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!---------------------------------------SEARCH SUBDOMAINS---------------------------------------------------------------------->
+<br><br><br>
+<h2 style=" text-align: center; font-weight: bold; color:#357CA5;">Browse Trending Topics</h2>
+<div class="topicscontainer">
+    {% for card in cards %}
+    <div class="topicscard">
+        <div class="card-clickable" onclick="window.location.href='/trending_topics?query={{ card.query }}'">
+            {{ card.title }}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+	<!--------------------------------------------------------------TESTIMONIAL-------------------------------------------------->
+	<br><br><br><h2 style=" text-align: center; font-weight: bold; color:#357CA5;">Our Students Says</h2><br><br><br>
+
+	<div class="myreviews">
+		<div class="review-container">
+			<div class="row">
+				<div class="col-md-6 col-lg-4">
+					<div class="reviewcard review-card card-hover mb-9">
+					  <div class="reviewcard-body text-center px-md-5 px-lg-6 my-2">
+						<div class="reviewcard-icon-border-large review-icon-circle mtn-80">
+						  <i class="fa fa-quote-left review-icon" aria-hidden="true"></i>
+						</div>
+						<div class="blockquote blockquote-sm mt-2">
+							{% if r1 %}
+								
+						  <p class="font-normal mb-5 review-content"> {{ r1.review }}</p>
+						  <div class="blockquote-footer text-uppercase text-black">{{ r1.username }}</div>
+						  {% endif %}
+						</div>
+					  </div>
+					</div>
+				  </div>
+		
+			  <div class="col-md-6 col-lg-4">
+				<div class="reviewcard review-card card-hover mb-9">
+				  <div class="reviewcard-body text-center px-md-5 px-lg-6 my-2">
+					<div class="reviewcard-icon-border-large review-icon-circle mtn-80">
+					  <i class="fa fa-quote-left review-icon" aria-hidden="true"></i>
+					</div>
+					<blockquote class="blockquote blockquote-sm mt-2">
+						{% if r2 %}
+					  <p class="font-normal mb-5 review-content"> {{ r2.review }}</p>
+					  <footer class="blockquote-footer text-uppercase text-black">{{ r2.username }}</footer>
+					  {% endif %}
+					</blockquote>
+				  </div>
+				</div>
+			  </div>
+		
+			  <div class="col-md-6 col-lg-4">
+				<div class="reviewcard review-card card-hover mb-9">
+				  <div class="reviewcard-body text-center px-md-5 px-lg-6 my-2">
+					<div class="reviewcard-icon-border-large review-icon-circle mtn-80">
+					  <i class="fa fa-quote-left review-icon" aria-hidden="true"></i>
+					</div>
+					<blockquote class="blockquote blockquote-sm mt-2">
+						{% if r3 %}
+					  <p class="font-normal mb-5 review-content"> {{ r3.review }}</p>
+					  <footer class="blockquote-footer text-uppercase text-black">{{ r3.username }}</footer>
+					  {% endif %}
+					</blockquote>
+				  </div>
+				</div>
+			  </div>
+		
+			  <div class="col-md-6 col-lg-4">
+				<div class="reviewcard review-card card-hover mb-9">
+				  <div class="reviewcard-body text-center px-md-5 px-lg-6 my-2">
+					<div class="reviewcard-icon-border-large review-icon-circle mtn-80">
+					  <i class="fa fa-quote-left review-icon" aria-hidden="true"></i>
+					</div>
+					<blockquote class="blockquote blockquote-sm mt-2">
+						{% if r4 %}
+					  <p class="font-normal mb-5 review-content"> {{ r4.review }}</p>
+					  <footer class="blockquote-footer text-uppercase text-black">{{ r4.username }}</footer>
+					  {% endif %}
+					</blockquote>
+				  </div>
+				</div>
+			  </div>
+		
+			  <div class="col-md-6 col-lg-4">
+				<div class="reviewcard review-card card-hover mb-9">
+				  <div class="reviewcard-body text-center px-md-5 px-lg-6 my-2">
+					<div class="reviewcard-icon-border-large review-icon-circle mtn-80">
+					  <i class="fa fa-quote-left review-icon" aria-hidden="true"></i>
+					</div>
+					<blockquote class="blockquote blockquote-sm mt-2">
+						{% if r5 %}
+					  <p class="font-normal mb-5 review-content"> {{ r5.review }}</p>
+					  <footer class="blockquote-footer text-uppercase text-black">{{ r5.username }}</footer>
+					  {% endif %}
+					</blockquote>
+				  </div>
+				</div>
+			  </div>
+		
+			  <div class="col-md-6 col-lg-4">
+				<div class="reviewcard review-card card-hover mb-9">
+				  <div class="reviewcard-body text-center px-md-5 px-lg-6 my-2">
+					<div class="reviewcard-icon-border-large review-icon-circle mtn-80">
+					  <i class="fa fa-quote-left review-icon" aria-hidden="true"></i>
+					</div>
+					<blockquote class="blockquote blockquote-sm mt-2">
+						{% if r6 %}
+					  <p class="font-normal mb-5 review-content"> {{ r6.review }}</p>
+					  <footer class="blockquote-footer text-uppercase text-black">{{ r6.username }}</footer>
+					  {% endif %}
+					</blockquote>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+		</div>
+	</div>
+<!-----------------------------------------------------SEARCH------------------------------------------------------>
+<div class="mybody">
+	<div  class='container-fluid mx-auto mt-5 mb-5 col-12' style="text-align: center; font-weight: bold;" >Why MentorConnect? 
+		<p><small class="text-muted">Our platform provides a wide range of academic materials and <br /> expert insights to enhance your scholarly pursuits.</small></p>	</div>
+	<div class="searchcontainer"> 
+	  <div class="searchcard">
+		<svg class="searchcard-icon" xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" viewBox="0 0 16 16">
+		 <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917zM8 8.46 1.758 5.965 8 3.052l6.242 2.913z"/>
+        
+		</svg> 
+		<div class="searchcard-body">
+		  <h5 class="searchcard-title">Curated Trending Topics</h5>
+		  <p small class="text-muted" >	Stay updated on the latest developments in academia with our curated selection of trending subjects.	
+		</p>
+		</div>
+	  </div>
+  
+	  <div class="searchcard">
+		<svg class="searchcard-icon" xmlns="http://www.w3.org/2000/svg" width="90" height="90" fill="currentColor" viewBox="0 0 16 16">
+		  <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484q-.121.12-.242.234c-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"/>
+		</svg>
+		<div class="searchcard-body">
+		  <h5 class="searchcard-title">Theses and Research Papers</h5>
+		  <p small class="text-muted" >	Access to a comprehensive collection of PhD theses and research papers, providing valuable resources for academic exploration and research.
+		</p>
+		</div>
+	  </div>
+  
+	  <div class="searchcard">
+		<svg class="searchcard-icon" xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" viewBox="0 0 16 16">
+			<path d="M13.5 3a.5.5 0 0 1 .5.5V11H2V3.5a.5.5 0 0 1 .5-.5zm-11-1A1.5 1.5 0 0 0 1 3.5V12h14V3.5A1.5 1.5 0 0 0 13.5 2zM0 12.5h16a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5"/>
+		</svg>
+		<div class="searchcard-body">
+		  <h5 class="searchcard-title">Global Network of Professors</h5>
+		  <p small class="text-muted">	Engage with renowned professors and experts from around the world, fostering opportunities for collaboration, mentorship, and knowledge exchange on our platform.
+		</p>
+		</div>
+	  </div>
+  
+	</div>
+  </div> 
+<!--------------------------------------------------REVIEW--------------------------------------------------->
+<!--
+
+<h2 style="text-align: center; font-weight: bold; color:#357CA5;">OUR STUDENTS SAY!</h2>
+
+<h5 style="text-align: center; color: #357CA5;">
+	<a href="{{url_for('review')}}" style=" text-decoration: underline; text-align: center; color: #357CA5;">want to send us a review?</a>
+</h5>
+
+<div class="reviewcontainer">
+	
+    <div class="reviewbox">
+        <div class="reviewtext">
+			{% if review1 %}
+            <div class="userreview">
+                <p>{{ review1.review }}</p>
+            </div>
+            <h3>{{ review1.username }}</h3>
+            {% endif %}
+        </div>
+    </div>
+    <div class="reviewbox">
+        <div class="reviewtext">
+            {% if review2 %}
+            <div class="userreview">
+                <p>{{ review2.review }}</p>
+            </div>
+            <h3>{{ review2.username }}</h3>
+            {% endif %}
+        </div>
+    </div>
+    <div class="reviewbox">
+        <div class="reviewtext">
+            {% if review3 %}
+            <div class="userreview">
+                <p>{{ review3.review }}</p>
+            </div>
+            <h3>{{ review3.username }}</h3>
+            {% endif %}
+        </div>
+    </div>
+</div>
+-->
+<!--------------------------------------------------TOP DOMAINS---------------------------------------------------->
+<!--
+<div class="topbody">
+	<h1 class="top-heading" style="text-align: center; font-weight: bold;">TOP DOMAINS</h1>
+	<div class="topcontainer">
+	  <div class="topcard" style="background-image: url('../frontend/images/topdomain4.jpg');">
+	  <div class="topcard" style="background-image: url('../frontend/images/topdomain4.jpg');">
+		<div class="topcard-body">
+		  <h5 class="topcard-title">Machine Learning</h5>
+		  <h5 class="topcard-title">Machine Learning</h5>
+		</div>
+	  </div>
+  
+	  <div class="topcard" style="background-image: url('../frontend/images/topdomain1.jpg');">
+	  <div class="topcard" style="background-image: url('../frontend/images/topdomain1.jpg');">
+		<div class="topcard-body">
+		  <h5 class="topcard-title">Blockchain</h5>
+		  <h5 class="topcard-title">Blockchain</h5>
+		</div>
+	  </div>
+  
+	  <div class="topcard" style="background-image: url('../frontend/images/topdomain2.jpg');">
+	  <div class="topcard" style="background-image: url('../frontend/images/topdomain2.jpg');">
+		<div class="topcard-body">
+		  <h5 class="topcard-title">Cyber Security</h5>
+		  <h5 class="topcard-title">Cyber Security</h5>
+		</div>
+	  </div>
+  
+	  <div class="topcard" style="background-image: url('../frontend/images/topdomain5.jpg');">
+	  <div class="topcard" style="background-image: url('../frontend/images/topdomain5.jpg');">
+		<div class="topcard-body">
+		  <h5 class="topcard-title">Cloud Computing</h5>
+		  <h5 class="topcard-title">Cloud Computing</h5>
+		</div>
+	  </div>
+	</div>
+  </div>
+-->
+<!----------------------------------------------------FOOTER IMAGE------------------------------------------------>
+<!--
+<div class="grad" style="background-image: url('../frontend/images/footermain.jpg');">
+</div>
+-->
+<!-----------------------------------------COUNTRIES------------------------------------------------------------------------>
+<br><br><h2 style=" text-align: center; font-weight: bold; color:#357CA5;">Explore Countries</h2><br>
+<div id="CountrySpotlightContainer">
+    <figure class="clickable"  onclick="showCountry('australia')">
+		<a href="https://www.phdportal.com/countries/19/australia.html" title="Australia">
+			<span class="Picture">
+				<img src="/frontend/images/aus.jpg" alt="Australia">
+			</span>
+		</a>
+        <figcaption>
+            <span class="country-name">Australia</span>
+            <div class="Toggle" >Australia is known for its high-quality education, stunning landscapes, and vibrant cities. Experience unique wildlife, diverse cultures, and excellent study opportunities.
+			</div>
+        </figcaption>
+    </figure>
+	<figure class="clickable">
+		<a href="https://www.phdportal.com/countries/19/canada.html" title="Canada">
+			<span class="Picture">
+				<img src="/frontend/images/can.jpg" alt="Canada">
+			</span>
+		</a>
+        <figcaption>
+            <span class="country-name">Canada</span>
+            <div class="Toggle">
+				Canada offers world-class education with top universities, multicultural environments, and beautiful landscapes. Enjoy diverse programs and friendly locals in this welcoming country.
+			</div>
+        </figcaption>
+    </figure>
+	<figure class="clickable">
+		<a href="https://www.phdportal.com/countries/19/united-kingdom.html" title="United Kingdom">
+			<span class="Picture">
+				<img src="/frontend/images/uk.jpg" alt="United Kingdom">
+			</span>
+		</a>
+        <figcaption>
+            <span class="country-name">United Kingdom</span>
+            <div class="Toggle">
+				The UK boasts prestigious universities, rich history, and a diverse culture. Enjoy a vibrant student life and extensive academic programs in renowned institutions.
+			</div>
+        </figcaption>
+    </figure>
+	<figure class="clickable">
+        <a href="https://www.phdportal.com/countries/19/switzerland.html" title="Switzerland">
+			<span class="Picture">
+				<img src="/frontend/images/swi.jpg" alt="Switzerland">
+			</span>
+		</a>
+        <figcaption>
+            <span class="country-name">Switzerland</span>
+            <div class="Toggle">
+				Switzerland excels in education, with top-ranked universities and multilingual programs. Experience high living standards, beautiful scenery, and a rich cultural heritage.
+			</div>
+        </figcaption>
+    </figure>
+	<figure class="clickable">
+        <a href="https://www.phdportal.com/countries/19/spain.html" title="Spain">
+			<span class="Picture">
+				<img src="/frontend/images/nor.jpg" alt="Spain">
+			</span>
+		</a>
+        <figcaption>
+            <span class="country-name">Spain</span>
+            <div class="Toggle">
+				Spain offers a rich cultural experience with vibrant cities, historic landmarks, and a warm climate. Discover world-class universities and diverse study opportunities.</div>
+        </figcaption>
+    </figure>
+	<figure class="clickable">
+        <a href="https://www.phdportal.com/countries/19/united-states.html" title="USA">
+			<span class="Picture">
+				<img src="/frontend/images/usa.jpg" alt="USA">
+			</span>
+		</a>
+        <figcaption>
+            <span class="country-name">USA</span>
+            <div class="Toggle">
+				The USA boasts top-ranked universities, cutting-edge research opportunities, and diverse cultures. Experience innovation, academic excellence, and endless possibilities.
+			</div>
+        </figcaption>
+    </figure>
+	<figure class="clickable">
+        <a href="https://www.phdportal.com/countries/19/germany.html" title="Germany">
+			<span class="Picture">
+				<img src="/frontend/images/ger.jpg" alt="Germany">
+			</span>
+		</a>
+        <figcaption>
+            <span class="country-name">Germany</span>
+            <div class="Toggle">
+				Germany is renowned for its quality education, affordable tuition fees, and strong economy. Explore historic cities, picturesque landscapes, and a welcoming international community.</div>
+        </figcaption>
+    </figure>
+	<figure class="clickable">
+        <a href="https://www.phdportal.com/countries/19/france.html" title="France">
+			<span class="Picture">
+				<img src="/frontend/images/fra.jpg" alt="France">
+			</span>
+		</a>
+        <figcaption>
+            <span class="country-name">France</span>
+            <div class="Toggle">
+				France combines academic excellence with cultural heritage, offering world-renowned universities and vibrant student life. Immerse yourself in art, history, and gastronomy.
+</div>
+        </figcaption>
+    </figure>
+    
+</div>
+
+
+<!--------------------------------------------FOOTER--------------------------------------------->
+<footer class="mt-5 mb-0 pb-0">
+    <div class="container-fluid bg-dark text-light footer p-0 mb-0 pb-0">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-white mb-3">Quick Link</h4>
+                    <a class="btn btn-link" style="color:#357CA5;" href="{{url_for('home')}}">About Us</a><br>
+                    <a class="btn btn-link" style="color:#357CA5;" href="{{url_for('newsletter')}}">Contact Us</a><br>
+                    <a class="btn btn-link" style="color:#357CA5;" href="{{url_for('register')}}">Join Now</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-white mb-3">Contact</h4>
+                    <a class="btn btn-outline-light btn-social" href="{{url_for('newsletter')}}"><i class="fa fa-envelope me-3"></i>Contact us</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-white mb-3">Gallery</h4>
+                    <div class="row g-2 pt-2">
+                        <div class="col-4">
+                            <img class="img-fluid bg-light p-1" src="../frontend/images/team-1.jpg"> 
+                        </div>
+                        <div class="col-4">
+                            <img class="img-fluid bg-light p-1" src="../frontend/images/team-2.jpg">
+                        </div>
+                        <div class="col-4">
+                            <img class="img-fluid bg-light p-1" src="../frontend/images/team-3.jpg">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-white mb-3">Newsletter</h4>
+                    <div class="position-relative mx-auto" style="max-width: 400px;">
+                        <input class="form-control border-0 w-100 py-3 ps-4 pe-5" type="none" placeholder="Your email">
+                        <a class="btn btn-outline-light btn-social py-2 position-absolute top-0 end-0 mt-2 me-2" style="background-color:#357CA5;" href="{{url_for('newsletter')}}">Join Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            &copy; <a class="border-bottom" style="color:#357CA5;" href="{{ url_for('home') }}">MentorConnects</a>, All Right Reserved.
+        </div>
+    </div>
+</footer>
+</div>
+
+<!--------------------------------------SCRIPT-------------------------------------------------->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  <!--navbar working-->
+
+<!-------------------------------------------NAVBAR SEARCHBAR-------------------------------------------------------------->
+<script>
+	function updateSearchInput() {
+		var selectedOption = document.getElementById("topicSelect").options[document.getElementById("topicSelect").selectedIndex].text;
+		document.getElementById("searchInput").value = selectedOption;
+	}
+</script>
+<!---------------------------------SCRIPT FOR RESEARCH PAPERS---------------------------------------------->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toastElements = [
+            document.getElementById('liveToast1'),
+            document.getElementById('liveToast2')
+        ];
+
+        let index = 0;
+        function showNextToast() {
+            const currentToast = toastElements[index];
+            const toastBootstrap = new bootstrap.Toast(currentToast);
+            toastBootstrap.show();
+            index = (index + 1) % toastElements.length;
+        }
+        showNextToast();
+        setInterval(showNextToast, 10000);
+    });
+</script>
+
+
+	<!----------------------------------SCRIPT FOR NAVBAR---------------------------------------------->
+<script>
+    function toggleDropdownMenu() {
+        var dropdownMenu = document.getElementById("dropdownMenu");
+        if (dropdownMenu.style.display === "block") {
+            dropdownMenu.style.display = "none";
+        } else {
+            dropdownMenu.style.display = "block";
+        }
+    }
+
+    function navigateTo(route) {
+        window.location.href = "{{ url_for('home') }}";
+    }
+</script> 
+<!------------------------------------SCRIPT FOR POP MESSAGES---------------------------------------------->
+
+</script> 
+<!------------------------------------SCRIPT FOR POP MESSAGES---------------------------------------------->
+
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		var popupMsg = document.getElementById("popup-msg").innerText.trim();
+		if (popupMsg) {
+			openPopup();
+		}
+	});
+
+	function openPopup() {
+		document.getElementById("popup").style.display = "block";
+	}
+
+	function ClosePopup() {
+		document.getElementById("popup").style.display = "none";
+		window.location.href = "{{url_for('home')}}"; 
+	}
+</script>
+
+
+<!----------------------------------------------------------------------------------------------------------->
+
+
+
+</body>
+</html>
