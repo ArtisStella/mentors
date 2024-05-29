@@ -30,16 +30,6 @@ app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
 
 # ---------------------------------------------------AUTHENTICATION
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    return login_user(mysql)
-
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    return register_user(mysql)
-
-
 @app.route('/logout')
 def logout():
     return logout_user()
