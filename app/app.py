@@ -5,8 +5,7 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from flask import Flask, render_template, request, redirect, url_for, session
-# , process_text, process_and_suggest, process_and_suggest_professors,
-from auth import ForgotPasswordForm, auth_blueprint, login_user, register_user, email_us, logout_user, review_us, subscribeus, updatedpassword, fetch_reviews, fetch_matching_trending_topics
+from auth import ForgotPasswordForm, auth_blueprint, login_user, register_user, email_us, logout_user, review_us, subscribeus, updatedpassword, fetch_reviews, fetch_matching_trending_topics, process_text# , process_and_suggest, process_and_suggest_professors,
 from multiprocessing import process
 from fuzzywuzzy import process
 
@@ -141,14 +140,14 @@ def abstract():
 @app.route('/abstractresult', methods=['POST'])
 def extract_keywords():
     text = request.form.get('text')
-    predicted_topic = []  # process_text(text)
+    predicted_topic = process_text(text)
     trending_topics = []  # process_and_suggest(predicted_topic)
     related_professors = []  # process_and_suggest_professors(predicted_topic)
     # dataframe mai can't use split n ek string mai display karrha loc se bhi nhi horha, isliye dict har value alag no \n ot \t prob also
     myls = related_professors.to_dict(orient='records')
 
     return "Temp"
-    return render_template('abstract_result.html', keywords=predicted_topic, trending_topics=trending_topics, related_professors=related_professors, myls=myls)
+    return render_template('abstract_result.html', keywords=[], trending_topics=[], related_professors=[], myls=myls)
 
 # ----------------------------------------------------------RESEARCH PAPERS AND TRENDING TOPICS
 

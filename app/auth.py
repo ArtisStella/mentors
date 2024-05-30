@@ -4,10 +4,16 @@ import MySQLdb.cursors
 from mailbox import Message
 from flask_wtf import FlaskForm
 from flask_mail import Mail, Message
+from data import dataset
 from wtforms.validators import InputRequired, Length
 from wtforms import Form, StringField, PasswordField, SubmitField
 from flask import Blueprint, redirect, render_template, request, session, url_for
 
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import PorterStemmer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 auth_blueprint = Blueprint('auth', __name__)
 
@@ -286,17 +292,17 @@ def execute_query(query, placeholders=None, mysql=None):
         return None
 
 
-# def preprocess(text):
-#     try:
-#         stop_words = set(stopwords.words('english'))
-#         stemmer = PorterStemmer()
-#         tokens = word_tokenize(text.lower())
-#         clean_tokens = [stemmer.stem(
-#             token) for token in tokens if token.isalnum() and token not in stop_words]
-#         return ' '.join(clean_tokens)
-#     except Exception as e:
-#         print("Error preprocessing text (user's abstract): ", e)
-#         return None
+def preprocess(text):
+    try:
+        stop_words = set(stopwords.words('english'))
+        stemmer = PorterStemmer()
+        tokens = word_tokenize(text.lower())
+        clean_tokens = [stemmer.stem(
+            token) for token in tokens if token.isalnum() and token not in stop_words]
+        return ' '.join(clean_tokens)
+    except Exception as e:
+        print("Error preprocessing text (user's abstract): ", e)
+        return None
 
 
 # def load_bert_model_and_tokenizer():
@@ -332,48 +338,48 @@ def execute_query(query, placeholders=None, mysql=None):
 #     return torch.cat(encoded_embeddings)
 
 
-# def process_text(text):
-#     try:
-#         print("Input is: ", text)
-#         preprocessed_input = preprocess(text)
-#         print("Preprocessed input is: ", preprocessed_input)
+def process_text(text):
+    try:
+        print("Input is: ", text)
+        preprocessed_input = preprocess(text)
+        print("Preprocessed input is: ", preprocessed_input)
 
-#         if preprocessed_input is None:
-#             return "Input text could not be processed. Please try again."
-#         abstracts = [abstract for abstract, domain in dataset]
-#         preprocessed_abstracts = [preprocess(
-#             abstract) for abstract in abstracts]
+        if preprocessed_input is None:
+            return "Input text could not be processed. Please try again."
+        abstracts = [abstract for abstract, domain in dataset]
+        preprocessed_abstracts = [preprocess(
+            abstract) for abstract in abstracts]
 
-#         print("Preprocessed abstracts: ", preprocessed_abstracts)
-#         combined_texts = preprocessed_abstracts + [preprocessed_input]
-#         vectorizer = TfidfVectorizer()
-#         tfidf_matrix = vectorizer.fit_transform(combined_texts)
+        print("Preprocessed abstracts: ", preprocessed_abstracts)
+        combined_texts = preprocessed_abstracts + [preprocessed_input]
+        vectorizer = TfidfVectorizer()
+        tfidf_matrix = vectorizer.fit_transform(combined_texts)
 
-#         print("TF-IDF matrix shape: ", tfidf_matrix.shape)
-#         tfidf_similarity_scores = cosine_similarity(
-#             tfidf_matrix[-1], tfidf_matrix[:-1]).flatten()
-#         print("TF-IDF Similarity scores: ", tfidf_similarity_scores)
-#         tokenizer, model = load_bert_model_and_tokenizer()
-#         bert_embeddings = encode_texts(combined_texts, tokenizer, model)
-#         bert_similarity_scores = cosine_similarity(
-#             bert_embeddings[-1].numpy().reshape(1, -1), bert_embeddings[:-1].numpy()).flatten()
-#         print("BERT Similarity scores: ", bert_similarity_scores)
-#         combined_similarity_scores = (
-#             tfidf_similarity_scores + bert_similarity_scores) / 2
-#         similar_abstracts = [(abstract, domain, similarity) for (
-#             abstract, domain), similarity in zip(dataset, combined_similarity_scores)]
-#         similar_abstracts = [
-#             item for item in similar_abstracts if item[2] > 0.0]
-#         similar_abstracts.sort(key=lambda x: x[2], reverse=True)
-#         if not similar_abstracts:
-#             return "No similar abstracts found. Please try another search term."
-#         top_similar = similar_abstracts[:10]
-#         prediction = top_similar[0][1]
-#         print("Suggested prediction:", prediction)
-#         return prediction
-#     except Exception as e:
-#         print("Error suggesting prediction:", e)
-#         return None
+        print("TF-IDF matrix shape: ", tfidf_matrix.shape)
+        tfidf_similarity_scores = cosine_similarity(
+            tfidf_matrix[-1], tfidf_matrix[:-1]).flatten()
+        print("TF-IDF Similarity scores: ", tfidf_similarity_scores)
+        # tokenizer, model = load_bert_model_and_tokenizer()
+        # bert_embeddings = encode_texts(combined_texts, tokenizer, model)
+        # bert_similarity_scores = cosine_similarity(
+        #     bert_embeddings[-1].numpy().reshape(1, -1), bert_embeddings[:-1].numpy()).flatten()
+        # print("BERT Similarity scores: ", bert_similarity_scores)
+        # combined_similarity_scores = (
+        #     tfidf_similarity_scores + bert_similarity_scores) / 2
+        # similar_abstracts = [(abstract, domain, similarity) for (
+        #     abstract, domain), similarity in zip(dataset, combined_similarity_scores)]
+        # similar_abstracts = [
+        #     item for item in similar_abstracts if item[2] > 0.0]
+        # similar_abstracts.sort(key=lambda x: x[2], reverse=True)
+        # if not similar_abstracts:
+        #     return "No similar abstracts found. Please try another search term."
+        # top_similar = similar_abstracts[:10]
+        # prediction = top_similar[0][1]
+        # print("Suggested prediction:", prediction)
+        # return prediction
+    except Exception as e:
+        print("Error suggesting prediction:", e)
+        return None
 
 
 # def load_trending_topics():
