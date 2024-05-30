@@ -21,6 +21,7 @@ app.config['MAIL_USERNAME'] = 'fyp.se18@gmail.com'
 app.config['MAIL_PASSWORD'] = '-'
 mail = Mail(app)
 
+app.secret_key = '12345678'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'flaskuser'
