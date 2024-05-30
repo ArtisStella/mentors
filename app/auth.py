@@ -1,20 +1,10 @@
-import os
 import re
-import torch
 import random
-import pandas as pd
 import MySQLdb.cursors
 from mailbox import Message
 from flask_wtf import FlaskForm
 from flask_mail import Mail, Message
-from nltk.tokenize import word_tokenize
-from nltk.stem import PorterStemmer
-from nltk.corpus import stopwords
-from data import dataset, trendingtopics
-from transformers import BertTokenizer, BertModel
 from wtforms.validators import InputRequired, Length
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import TfidfVectorizer
 from wtforms import Form, StringField, PasswordField, SubmitField
 from flask import Blueprint, redirect, render_template, request, session, url_for
 
