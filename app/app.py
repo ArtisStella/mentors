@@ -5,7 +5,7 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from flask import Flask, render_template, request, redirect, url_for, session
-from auth import ForgotPasswordForm, auth_blueprint,  email_us, logout_user, review_us, subscribeus, updatedpassword, fetch_reviews, fetch_matching_trending_topics# , process_text, process_and_suggest, process_and_suggest_professors, 
+from auth import ForgotPasswordForm, auth_blueprint, register_user, email_us, logout_user, review_us, subscribeus, updatedpassword, fetch_reviews, fetch_matching_trending_topics# , process_text, process_and_suggest, process_and_suggest_professors, 
 from multiprocessing import process
 from fuzzywuzzy import process
 
@@ -44,6 +44,9 @@ def logout():
 def userlogin():
     return render_template('userlogin.html')
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    return register_user(mysql)
 # --------------------------------------------PASSWORD, EMAIL, NEWSLETTER, REVIEW
 
 
