@@ -203,7 +203,7 @@ def search():
     finally:
         cursor.close()
 
-    return render_template('search_results.html', userQuery=[], results=[])
+    return render_template('search_results.html', userQuery=userSearch, results=search_results)
 
 
 @app.route('/trending_topics')
