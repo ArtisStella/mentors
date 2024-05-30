@@ -5,7 +5,8 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from flask import Flask, render_template, request, redirect, url_for, session
-from auth import ForgotPasswordForm, auth_blueprint, register_user, email_us, logout_user, review_us, subscribeus, updatedpassword, fetch_reviews, fetch_matching_trending_topics# , process_text, process_and_suggest, process_and_suggest_professors, 
+# , process_text, process_and_suggest, process_and_suggest_professors,
+from auth import ForgotPasswordForm, auth_blueprint, login_user, register_user, email_us, logout_user, review_us, subscribeus, updatedpassword, fetch_reviews, fetch_matching_trending_topics
 from multiprocessing import process
 from fuzzywuzzy import process
 
@@ -35,6 +36,11 @@ app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
 
 # ---------------------------------------------------AUTHENTICATION
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    return login_user(mysql)
+
+
 @app.route('/logout')
 def logout():
     return logout_user()
@@ -43,6 +49,7 @@ def logout():
 @app.route('/userlogin')
 def userlogin():
     return render_template('userlogin.html')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -133,9 +140,9 @@ def abstract():
 @app.route('/abstractresult', methods=['POST'])
 def extract_keywords():
     text = request.form.get('text')
-    predicted_topic = [] # process_text(text)
-    trending_topics = [] # process_and_suggest(predicted_topic)
-    related_professors = [] # process_and_suggest_professors(predicted_topic)
+    predicted_topic = []  # process_text(text)
+    trending_topics = []  # process_and_suggest(predicted_topic)
+    related_professors = []  # process_and_suggest_professors(predicted_topic)
     # dataframe mai can't use split n ek string mai display karrha loc se bhi nhi horha, isliye dict har value alag no \n ot \t prob also
     myls = related_professors.to_dict(orient='records')
 
