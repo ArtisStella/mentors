@@ -1,19 +1,22 @@
-import re
-import random
-import MySQLdb.cursors
+from transformers import BertTokenizer, BertModel
+import torch
+from nltk.stem import PorterStemmer
 from mailbox import Message
+import os
+import random
+import re
+from flask import Blueprint, redirect, render_template, request, session, url_for
+from wtforms import Form, StringField, PasswordField, SubmitField
+from wtforms.validators import InputRequired, Length
+import MySQLdb.cursors
 from flask_wtf import FlaskForm
 from flask_mail import Mail, Message
-from data import dataset
-from wtforms.validators import InputRequired, Length
-from wtforms import Form, StringField, PasswordField, SubmitField
-from flask import Blueprint, redirect, render_template, request, session, url_for
-
-from nltk.corpus import stopwords
+import pandas as pd
 from nltk.tokenize import word_tokenize
-from nltk.stem import PorterStemmer
+from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from data import dataset, trendingtopics
 
 auth_blueprint = Blueprint('auth', __name__)
 
@@ -305,37 +308,37 @@ def preprocess(text):
         return None
 
 
-# def load_bert_model_and_tokenizer():
-#     cache_dir = "./cache"
-#     os.makedirs(cache_dir, exist_ok=True)
-#     tokenizer_path = os.path.join(cache_dir, "bert-base-uncased-tokenizer")
-#     model_path = os.path.join(cache_dir, "bert-base-uncased-model")
-#     if os.path.exists(tokenizer_path) and os.path.exists(model_path):
-#         tokenizer = BertTokenizer.from_pretrained(tokenizer_path)
-#         model = BertModel.from_pretrained(model_path)
-#         print("BERT model and tokenizer loaded from cache.")
-#     else:
-#         print("BERT model and tokenizer not found in cache. Downloading...")
-#         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-#         model = BertModel.from_pretrained('bert-base-uncased')
-#         tokenizer.save_pretrained(tokenizer_path)
-#         model.save_pretrained(model_path)
-#         print("BERT model and tokenizer downloaded and saved to cache.")
-#     return tokenizer, model
+def load_bert_model_and_tokenizer():
+    cache_dir = "./cache"
+    os.makedirs(cache_dir, exist_ok=True)
+    tokenizer_path = os.path.join(cache_dir, "bert-base-uncased-tokenizer")
+    model_path = os.path.join(cache_dir, "bert-base-uncased-model")
+    if os.path.exists(tokenizer_path) and os.path.exists(model_path):
+        tokenizer = BertTokenizer.from_pretrained(tokenizer_path)
+        model = BertModel.from_pretrained(model_path)
+        print("BERT model and tokenizer loaded from cache.")
+    else:
+        print("BERT model and tokenizer not found in cache. Downloading...")
+        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+        model = BertModel.from_pretrained('bert-base-uncased')
+        tokenizer.save_pretrained(tokenizer_path)
+        model.save_pretrained(model_path)
+        print("BERT model and tokenizer downloaded and saved to cache.")
+    return tokenizer, model
 
 
-# def encode_texts(texts, tokenizer, model, batch_size=32):
-#     num_texts = len(texts)
-#     encoded_embeddings = []
-#     for i in range(0, num_texts, batch_size):
-#         batch_texts = texts[i:i+batch_size]
-#         encoded_input = tokenizer(
-#             batch_texts, padding=True, truncation=True, return_tensors='pt')
-#         with torch.no_grad():
-#             model_output = model(**encoded_input)
-#         batch_embeddings = model_output.last_hidden_state.mean(dim=1)
-#         encoded_embeddings.append(batch_embeddings)
-#     return torch.cat(encoded_embeddings)
+def encode_texts(texts, tokenizer, model, batch_size=32):
+    num_texts = len(texts)
+    encoded_embeddings = []
+    for i in range(0, num_texts, batch_size):
+        batch_texts = texts[i:i+batch_size]
+        encoded_input = tokenizer(
+            batch_texts, padding=True, truncation=True, return_tensors='pt')
+        with torch.no_grad():
+            model_output = model(**encoded_input)
+        batch_embeddings = model_output.last_hidden_state.mean(dim=1)
+        encoded_embeddings.append(batch_embeddings)
+    return torch.cat(encoded_embeddings)
 
 
 def process_text(text):
@@ -359,159 +362,159 @@ def process_text(text):
         tfidf_similarity_scores = cosine_similarity(
             tfidf_matrix[-1], tfidf_matrix[:-1]).flatten()
         print("TF-IDF Similarity scores: ", tfidf_similarity_scores)
-        # tokenizer, model = load_bert_model_and_tokenizer()
-        # bert_embeddings = encode_texts(combined_texts, tokenizer, model)
-        # bert_similarity_scores = cosine_similarity(
-        #     bert_embeddings[-1].numpy().reshape(1, -1), bert_embeddings[:-1].numpy()).flatten()
-        # print("BERT Similarity scores: ", bert_similarity_scores)
-        # combined_similarity_scores = (
-        #     tfidf_similarity_scores + bert_similarity_scores) / 2
-        # similar_abstracts = [(abstract, domain, similarity) for (
-        #     abstract, domain), similarity in zip(dataset, combined_similarity_scores)]
-        # similar_abstracts = [
-        #     item for item in similar_abstracts if item[2] > 0.0]
-        # similar_abstracts.sort(key=lambda x: x[2], reverse=True)
-        # if not similar_abstracts:
-        #     return "No similar abstracts found. Please try another search term."
-        # top_similar = similar_abstracts[:10]
-        # prediction = top_similar[0][1]
-        # print("Suggested prediction:", prediction)
-        # return prediction
+        tokenizer, model = load_bert_model_and_tokenizer()
+        bert_embeddings = encode_texts(combined_texts, tokenizer, model)
+        bert_similarity_scores = cosine_similarity(
+            bert_embeddings[-1].numpy().reshape(1, -1), bert_embeddings[:-1].numpy()).flatten()
+        print("BERT Similarity scores: ", bert_similarity_scores)
+        combined_similarity_scores = (
+            tfidf_similarity_scores + bert_similarity_scores) / 2
+        similar_abstracts = [(abstract, domain, similarity) for (
+            abstract, domain), similarity in zip(dataset, combined_similarity_scores)]
+        similar_abstracts = [
+            item for item in similar_abstracts if item[2] > 0.0]
+        similar_abstracts.sort(key=lambda x: x[2], reverse=True)
+        if not similar_abstracts:
+            return "No similar abstracts found. Please try another search term."
+        top_similar = similar_abstracts[:10]
+        prediction = top_similar[0][1]
+        print("Suggested prediction:", prediction)
+        return prediction
     except Exception as e:
         print("Error suggesting prediction:", e)
         return None
 
 
-# def load_trending_topics():
-#     trending_topics = [(topic, preprocess(topic)) for topic in trendingtopics]
-#     return trending_topics
+def load_trending_topics():
+    trending_topics = [(topic, preprocess(topic)) for topic in trendingtopics]
+    return trending_topics
 
 
-# def calculate_similarity(text1, text2):
-#     try:
-#         # print("vectorizing trending topics. \nCalculating Similarity scores for trending topics")
-#         vectorizer = TfidfVectorizer()
-#         X = vectorizer.fit_transform([text2, text1])
-#         similarity_score = (X * X.T).A[0, 1]
-#         return similarity_score
-#     except Exception as e:
-#         print("Error calculating trending topics similarity: ", e)
-#         return None
+def calculate_similarity(text1, text2):
+    try:
+        # print("vectorizing trending topics. \nCalculating Similarity scores for trending topics")
+        vectorizer = TfidfVectorizer()
+        X = vectorizer.fit_transform([text2, text1])
+        similarity_score = (X * X.T).A[0, 1]
+        return similarity_score
+    except Exception as e:
+        print("Error calculating trending topics similarity: ", e)
+        return None
 
 
-# def suggest_trending_topics(predicted_topic, trending_topics):
-#     try:
-#         similar_topics = []
-#         for topic, topic_text in trending_topics:
-#             similarity = calculate_similarity(predicted_topic, topic_text)
-#             if similarity > 0.0:
-#                 similar_topics.append((topic, similarity))
-#         similar_topics.sort(key=lambda x: x[1], reverse=True)
-#         similar_topics.sort(key=lambda x: x[1], reverse=True)
-#         print("calculating similar topics....similar topics are",
-#               similar_topics[:3])
-#         top_similar = similar_topics[:10]
-#         return top_similar
-#         return top_similar
-#     except Exception as e:
-#         print("Error suggesting trending topics: ", e)
-#         return None
+def suggest_trending_topics(predicted_topic, trending_topics):
+    try:
+        similar_topics = []
+        for topic, topic_text in trending_topics:
+            similarity = calculate_similarity(predicted_topic, topic_text)
+            if similarity > 0.0:
+                similar_topics.append((topic, similarity))
+        similar_topics.sort(key=lambda x: x[1], reverse=True)
+        similar_topics.sort(key=lambda x: x[1], reverse=True)
+        print("calculating similar topics....similar topics are",
+              similar_topics[:3])
+        top_similar = similar_topics[:10]
+        return top_similar
+        return top_similar
+    except Exception as e:
+        print("Error suggesting trending topics: ", e)
+        return None
 
 
-# def process_and_suggest(predicted_topic):
-#     try:
-#         trending_topics = load_trending_topics()
-#         if trending_topics is None:
-#             return None
+def process_and_suggest(predicted_topic):
+    try:
+        trending_topics = load_trending_topics()
+        if trending_topics is None:
+            return None
 
-#         if not trending_topics:
-#             print("No trending topics found.")
-#             return None
+        if not trending_topics:
+            print("No trending topics found.")
+            return None
 
-#         trending_topics = suggest_trending_topics(
-#             predicted_topic, trending_topics)
-#         print("\nTrending topics are: ", trending_topics[:3])
-#         return trending_topics
-#     except Exception as e:
-#         print("Error processing and suggesting trending topics: ", e)
-#         return None
-
-
-# def load_professors_data():
-#     try:
-#         file_path = '/home/ubuntu/mentors/app/professors_data.xlsx'
-#         professors_data = pd.read_excel(file_path)
-#         return professors_data
-#     except FileNotFoundError:
-#         print("Error: professors_data.xlsx file not found.")
-#         return None
+        trending_topics = suggest_trending_topics(
+            predicted_topic, trending_topics)
+        print("\nTrending topics are: ", trending_topics[:3])
+        return trending_topics
+    except Exception as e:
+        print("Error processing and suggesting trending topics: ", e)
+        return None
 
 
-# professors_data = load_professors_data()
+def load_professors_data():
+    try:
+        file_path = '/home/ubuntu/mentors/app/professors_data.xlsx'
+        professors_data = pd.read_excel(file_path)
+        return professors_data
+    except FileNotFoundError:
+        print("Error: professors_data.xlsx file not found.")
+        return None
 
 
-# def calculate_professors_similarity(predicted_topic):
-#     try:
-#         # Preprocess predicted topic
-#         predicted_topic_processed = preprocess(predicted_topic)
-#         if predicted_topic_processed is None:
-#             raise ValueError("Error: Preprocessed predicted topic is None")
-
-#         # Check if professors data is loaded
-#         if professors_data is None:
-#             raise ValueError("Error: Professors' data is not loaded")
-
-#         # Preprocess research interests
-#         research_interests = professors_data['Research Interests'].fillna(
-#             '').str.lower().str.replace('[^a-zA-Z\s]', '')
-#         if research_interests.empty:
-#             raise ValueError("Error: Research interests column is empty")
-
-#         # Vectorize research interests
-#         vectorizer = TfidfVectorizer()
-#         research_interests_tfidf = vectorizer.fit_transform(research_interests)
-#         if research_interests_tfidf.shape[0] == 0:
-#             raise ValueError(
-#                 "Error: TF-IDF vectorization resulted in an empty matrix")
-
-#         # Vectorize predicted topic
-#         predicted_topic_tfidf = vectorizer.transform(
-#             [predicted_topic_processed])
-#         if predicted_topic_tfidf.shape[0] == 0:
-#             raise ValueError(
-#                 "Error: TF-IDF vectorization for predicted topic resulted in an empty matrix")
-
-#         # Calculate similarity scores
-#         similarity_scores = cosine_similarity(
-#             predicted_topic_tfidf, research_interests_tfidf)
-#         if similarity_scores.size == 0:
-#             raise ValueError("Error: Similarity scores array is empty")
-
-#         # Sort professors indices by similarity score
-#         sorted_professors_indices = similarity_scores.argsort()[0][::-1]
-#         top_n = 5
-#         top_professors = professors_data.iloc[sorted_professors_indices[:top_n]]
-#         print("Top 5 similar professors saved")
-#         return top_professors
-
-#     except Exception as e:
-#         print("Error calculating professors similarity:", e)
-#         return None
+professors_data = load_professors_data()
 
 
-# def process_and_suggest_professors(predicted_topic):
-#     try:
-#         print("Suggesting professors......")
-#         # predicted_topic = process_text(text)
-#         related_professors = calculate_professors_similarity(predicted_topic)
-#         print("predicted keyword: ", predicted_topic,
-#               "\ntop 5 related professors: ", related_professors)
-#         print("predicted keyword: ", predicted_topic,
-#               "\ntop 5 related professors: ", related_professors)
-#         return related_professors
-#     except Exception as e:
-#         print("Error processing and suggesting professors: ", e)
-#         return None
+def calculate_professors_similarity(predicted_topic):
+    try:
+        # Preprocess predicted topic
+        predicted_topic_processed = preprocess(predicted_topic)
+        if predicted_topic_processed is None:
+            raise ValueError("Error: Preprocessed predicted topic is None")
+
+        # Check if professors data is loaded
+        if professors_data is None:
+            raise ValueError("Error: Professors' data is not loaded")
+
+        # Preprocess research interests
+        research_interests = professors_data['Research Interests'].fillna(
+            '').str.lower().str.replace('[^a-zA-Z\s]', '')
+        if research_interests.empty:
+            raise ValueError("Error: Research interests column is empty")
+
+        # Vectorize research interests
+        vectorizer = TfidfVectorizer()
+        research_interests_tfidf = vectorizer.fit_transform(research_interests)
+        if research_interests_tfidf.shape[0] == 0:
+            raise ValueError(
+                "Error: TF-IDF vectorization resulted in an empty matrix")
+
+        # Vectorize predicted topic
+        predicted_topic_tfidf = vectorizer.transform(
+            [predicted_topic_processed])
+        if predicted_topic_tfidf.shape[0] == 0:
+            raise ValueError(
+                "Error: TF-IDF vectorization for predicted topic resulted in an empty matrix")
+
+        # Calculate similarity scores
+        similarity_scores = cosine_similarity(
+            predicted_topic_tfidf, research_interests_tfidf)
+        if similarity_scores.size == 0:
+            raise ValueError("Error: Similarity scores array is empty")
+
+        # Sort professors indices by similarity score
+        sorted_professors_indices = similarity_scores.argsort()[0][::-1]
+        top_n = 5
+        top_professors = professors_data.iloc[sorted_professors_indices[:top_n]]
+        print("Top 5 similar professors saved")
+        return top_professors
+
+    except Exception as e:
+        print("Error calculating professors similarity:", e)
+        return None
+
+
+def process_and_suggest_professors(predicted_topic):
+    try:
+        print("Suggesting professors......")
+        # predicted_topic = process_text(text)
+        related_professors = calculate_professors_similarity(predicted_topic)
+        print("predicted keyword: ", predicted_topic,
+              "\ntop 5 related professors: ", related_professors)
+        print("predicted keyword: ", predicted_topic,
+              "\ntop 5 related professors: ", related_professors)
+        return related_professors
+    except Exception as e:
+        print("Error processing and suggesting professors: ", e)
+        return None
 
 
 def fetch_matching_trending_topics(user_query, mysql):
