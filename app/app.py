@@ -146,8 +146,7 @@ def extract_keywords():
     # dataframe mai can't use split n ek string mai display karrha loc se bhi nhi horha, isliye dict har value alag no \n ot \t prob also
     myls = related_professors.to_dict(orient='records')
 
-    return "Temp"
-    return render_template('abstract_result.html', keywords=[], trending_topics=[], related_professors=[], myls=myls)
+    return render_template('abstract_result.html', keywords=predicted_topic, trending_topics=trending_topics, related_professors=related_professors, myls=myls)
 
 # ----------------------------------------------------------RESEARCH PAPERS AND TRENDING TOPICS
 
